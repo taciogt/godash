@@ -56,10 +56,48 @@ func TestEvery(t *testing.T) {
 	})
 
 	t.Run("string slices", func(t *testing.T) {
-		// TODO: implement this test
+		tests := []struct {
+			name string
+			s    []string
+			p    func(string) bool
+			want bool
+		}{{
+			name: "every string has length greater than 0",
+			s:    []string{"abc", "de", "f"},
+			p:    func(s string) bool { return len(s) > 0 },
+			want: true,
+		}, {
+			name: "not every string has length greater than 3",
+			s:    []string{"abc", "defg", "hijklm"},
+			p:    func(s string) bool { return len(s) > 3 },
+			want: false,
+		}, {
+			name: "no strings in slice",
+			s:    []string{},
+			p:    func(s string) bool { return len(s) > 0 },
+			want: true,
+		}, {
+			name: "single element with length 3",
+			s:    []string{"abc"},
+			p:    func(s string) bool { return len(s) == 3 },
+			want: true,
+		}, {
+			name: "single element with length less than 3",
+			s:    []string{"ab"},
+			p:    func(s string) bool { return len(s) == 3 },
+			want: false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := Every(tt.s, tt.p); got != tt.want {
+					t.Errorf("Every(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
 	})
 
-	t.Run("slices of a custom strcut", func(t *testing.T) {
+	t.Run("slices of a custom struct", func(t *testing.T) {
 		// TODO: implement this test
 	})
 }
