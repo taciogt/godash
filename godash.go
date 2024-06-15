@@ -35,3 +35,16 @@ func Find[T any, S ~[]T](s S, p func(T) bool) (T, bool) {
 	var zero T
 	return zero, false
 }
+
+// Filter returns a new slice containing only the elements from the given slice that satisfy the provided predicate function.
+func Filter[T any, S ~[]T](s S, p func(T) bool) Slice[T] {
+	result := make([]T, 0)
+
+	for _, v := range s {
+		if p(v) {
+			result = append(result, v)
+		}
+	}
+
+	return result
+}
