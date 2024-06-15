@@ -2,6 +2,7 @@ package godash
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -208,7 +209,31 @@ func TestFilter(t *testing.T) {
 	})
 
 	t.Run("test for string slices", func(t *testing.T) {
-		// TODO: implement these tests
+		stringsWithLetterA := func(s string) bool {
+			return strings.Contains(s, "a")
+		}
+
+		tests := []struct {
+			name  string
+			slice []string
+			p     Predicate[string]
+			want  []string
+		}{{
+			name:  "some strings with letter a",
+			slice: []string{"a", "bacon", "no first letter"},
+			p:     stringsWithLetterA,
+			want:  []string{"a", "bacon"},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				result := Filter(tt.slice, tt.p)
+				if !reflect.DeepEqual(result, tt.want) {
+					t.Errorf("got %v, want %v", result, tt.want)
+				}
+			})
+		}
+
 	})
 
 	t.Run("test for custom struct slices", func(t *testing.T) {
