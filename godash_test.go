@@ -4,6 +4,66 @@ import (
 	"testing"
 )
 
+func TestEvery(t *testing.T) {
+	t.Run("integer slices", func(t *testing.T) {
+		even := func(n int) bool { return n%2 == 0 }
+		positive := func(n int) bool { return n > 0 }
+
+		tests := []struct {
+			name string
+			s    Slice[int]
+			p    func(int) bool
+			want bool
+		}{{
+			name: "every even number",
+			s:    Slice[int]{2, 4, 6, 8, 10},
+			p:    even,
+			want: true,
+		}, {
+			name: "not every even number",
+			s:    Slice[int]{2, 4, 5, 8, 10},
+			p:    even,
+			want: false,
+		}, {
+			name: "every positive number",
+			s:    Slice[int]{1, 2, 3, 4, 5},
+			p:    positive,
+			want: true,
+		}, {
+			name: "empty slice",
+			s:    Slice[int]{},
+			p:    even,
+			want: true,
+		}, {
+			name: "single element",
+			s:    []int{2},
+			p:    even,
+			want: true,
+		}, {
+			name: "negative elements",
+			s:    []int{-2, -4, -6, -8, -10},
+			p:    positive,
+			want: false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := Every(tt.s, tt.p); got != tt.want {
+					t.Errorf("Every(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
+	})
+
+	t.Run("string slices", func(t *testing.T) {
+		// TODO: implement this test
+	})
+
+	t.Run("slices of a custom strcut", func(t *testing.T) {
+		// TODO: implement this test
+	})
+}
+
 func TestFind(t *testing.T) {
 	t.Run("an integer slice and a predicate that finds something", func(t *testing.T) {
 		s := []int{0, 1, 2, 3, 4, 5, 6, 7, 8}
@@ -33,6 +93,10 @@ func TestFind(t *testing.T) {
 		if result != "" || ok {
 			t.Errorf("Find(%v, predicate)=%v, %t, want def, true", s, result, ok)
 		}
+	})
+
+	t.Run("slices of a custom struct", func(t *testing.T) {
+		// TODO: implement this test
 	})
 }
 

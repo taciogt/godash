@@ -2,8 +2,16 @@ package godash
 
 type Slice[T any] []T
 
-//type Slice interface {
-//}
+// Every returns true if every element in the given slice satisfies the provided predicate function.
+// Otherwise, it returns false.
+func Every[T any](s Slice[T], p func(T) bool) bool {
+	for _, v := range s {
+		if !p(v) {
+			return false
+		}
+	}
+	return true
+}
 
 // FindIndex returns the index of the first element in the given slice that satisfies
 // the provided predicate function. If no element satisfies the predicate,
