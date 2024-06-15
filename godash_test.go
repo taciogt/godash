@@ -35,3 +35,34 @@ func TestFind(t *testing.T) {
 		}
 	})
 }
+
+func TestFindIndex(t *testing.T) {
+	t.Run("integer slices", func(t *testing.T) {
+		cases := []struct {
+			name      string
+			arr       []int
+			predicate func(int) bool
+			wantIndex int
+			wantBool  bool
+		}{
+			{"all positive", []int{1, 2, 3}, func(n int) bool { return n > 0 }, 0, true},
+			{"all negative", []int{-1, -2, -3}, func(n int) bool { return n > 0 }, -1, false},
+			{"empty", []int{}, func(n int) bool { return n > 0 }, -1, false},
+			{"no match", []int{1, 2, 3}, func(n int) bool { return n > 3 }, -1, false},
+			{"first match", []int{1, 2, 3}, func(n int) bool { return n == 1 }, 0, true},
+			{"last match", []int{1, 2, 3}, func(n int) bool { return n == 3 }, 2, true},
+			{"middle match", []int{1, 2, 3}, func(n int) bool { return n == 2 }, 1, true},
+		}
+
+		for _, tt := range cases {
+			t.Run(tt.name, func(t *testing.T) {
+				gotIndex, gotBool := FindIndex(tt.arr, tt.predicate)
+				if gotIndex != tt.wantIndex || gotBool != tt.wantBool {
+					t.Errorf("FindIndex() = %v, %v; want %v, %v", gotIndex, gotBool, tt.wantIndex, tt.wantBool)
+				}
+			})
+		}
+
+	})
+
+}
