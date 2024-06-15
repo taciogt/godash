@@ -138,6 +138,10 @@ func TestEvery(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("slices of a type alias", func(t *testing.T) {
+		// TODO
+	})
 }
 
 func TestFind(t *testing.T) {
@@ -174,6 +178,10 @@ func TestFind(t *testing.T) {
 	t.Run("slices of a custom struct", func(t *testing.T) {
 		// TODO: implement this test
 	})
+
+	t.Run("slices of a type alias", func(t *testing.T) {
+		// TODO
+	})
 }
 
 func TestFindIndex(t *testing.T) {
@@ -202,5 +210,9 @@ func TestFindIndex(t *testing.T) {
 				}
 			})
 		}
+	})
+
+	t.Run("slices of a type alias", func(t *testing.T) {
+		// TODO
 	})
 }
