@@ -98,7 +98,45 @@ func TestEvery(t *testing.T) {
 	})
 
 	t.Run("slices of a custom struct", func(t *testing.T) {
-		// TODO: implement this test
+		type customStruct struct {
+			int    int
+			string string
+		}
+
+		tests := []struct {
+			name string
+			s    []customStruct
+			p    func(customStruct) bool
+			want bool
+		}{{
+			name: "every int field is greater than zero",
+			s:    []customStruct{{int: 1}, {int: 2}},
+			p:    func(cs customStruct) bool { return cs.int > 0 },
+			want: true,
+		}, {
+			name: "not every int field is greater than zero",
+			s:    []customStruct{{int: 1}, {int: 2}, {int: 0}},
+			p:    func(cs customStruct) bool { return cs.int > 0 },
+			want: false,
+		}, {
+			name: "every string len is greater than zero",
+			s:    []customStruct{{string: "a"}, {string: "b"}, {string: "c"}, {string: "d"}, {string: "e"}},
+			p:    func(cs customStruct) bool { return len(cs.string) > 0 },
+			want: true,
+		}, {
+			name: "not every string len is greater than zero",
+			s:    []customStruct{{string: "a"}, {string: "b"}, {string: "c"}, {string: "d"}, {}},
+			p:    func(cs customStruct) bool { return len(cs.string) > 0 },
+			want: false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := Every(tt.s, tt.p); got != tt.want {
+					t.Errorf("Every(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
 	})
 }
 
