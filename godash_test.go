@@ -1,6 +1,7 @@
 package godash
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -144,6 +145,81 @@ func TestEvery(t *testing.T) {
 	})
 }
 
+func TestFilter(t *testing.T) {
+	t.Run("tests for slices of integers", func(t *testing.T) {
+		greaterThanFive := func(value int) bool {
+			return value > 5
+		}
+
+		isEven := func(value int) bool {
+			return value%2 == 0
+		}
+
+		tests := []struct {
+			name     string
+			source   []int
+			pred     Predicate[int]
+			expected []int
+		}{{
+			name:     "empty slice",
+			source:   []int{},
+			pred:     greaterThanFive,
+			expected: []int{},
+		}, {
+			name:     "all elements are greater than five",
+			source:   []int{6, 7, 9, 11},
+			pred:     greaterThanFive,
+			expected: []int{6, 7, 9, 11},
+		}, {
+			name:     "non existent greater than five",
+			source:   []int{1, 2, 3, 4, 5},
+			pred:     greaterThanFive,
+			expected: []int{},
+		}, {
+			name:     "partial greater than five",
+			source:   []int{1, 6, 3, 7},
+			pred:     greaterThanFive,
+			expected: []int{6, 7},
+		}, {
+			name:     "all elements even",
+			source:   []int{2, 4, 6, 8},
+			pred:     isEven,
+			expected: []int{2, 4, 6, 8},
+		}, {
+			name:     "no even elements",
+			source:   []int{1, 3, 5, 7},
+			pred:     isEven,
+			expected: []int{},
+		}, {
+			name:     "some even elements",
+			source:   []int{1, 2, 3, 4},
+			pred:     isEven,
+			expected: []int{2, 4},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				result := Filter(tt.source, tt.pred)
+				if !reflect.DeepEqual(result, tt.expected) {
+					t.Errorf("got %v, want %v", result, tt.expected)
+				}
+			})
+		}
+	})
+
+	t.Run("test for string slices", func(t *testing.T) {
+		// TODO: implement these tests
+	})
+
+	t.Run("test for custom struct slices", func(t *testing.T) {
+		// TODO: implement these tests
+	})
+
+	t.Run("test for custom alias types", func(t *testing.T) {
+		// TODO: implement these tests
+	})
+}
+
 func TestFind(t *testing.T) {
 	t.Run("an integer slice and a predicate that finds something", func(t *testing.T) {
 		s := []int{0, 1, 2, 3, 4, 5, 6, 7, 8}
@@ -156,7 +232,7 @@ func TestFind(t *testing.T) {
 	})
 
 	t.Run("a string slice and a predicate that finds something", func(t *testing.T) {
-		s := []string{"a", "bc", "def", "hijk"}
+		s := []string{"a", "bc", "def", "1234"}
 		predicate := func(s string) bool { return len(s) == 3 }
 
 		result, ok := Find(s, predicate)
