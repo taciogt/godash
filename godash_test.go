@@ -6,6 +6,11 @@ import (
 	"testing"
 )
 
+type customStruct struct {
+	int    int
+	string string
+}
+
 func TestEvery(t *testing.T) {
 	t.Run("integer slices", func(t *testing.T) {
 		even := func(n int) bool { return n%2 == 0 }
@@ -100,11 +105,6 @@ func TestEvery(t *testing.T) {
 	})
 
 	t.Run("slices of a custom struct", func(t *testing.T) {
-		type customStruct struct {
-			int    int
-			string string
-		}
-
 		tests := []struct {
 			name string
 			s    []customStruct
@@ -237,7 +237,31 @@ func TestFilter(t *testing.T) {
 	})
 
 	t.Run("test for custom struct slices", func(t *testing.T) {
-		// TODO: implement these tests
+		tests := []struct {
+			name string
+			s    []customStruct
+			p    func(customStruct) bool
+			want []customStruct
+		}{{
+			name: "all elements",
+			s:    []customStruct{{int: 1}, {int: 2}},
+			p:    func(cs customStruct) bool { return true },
+			want: []customStruct{{int: 1}, {int: 2}},
+		}, {
+			name: "only the middle one",
+			s:    []customStruct{{int: 1}, {int: 2}, {int: 0}},
+			p:    func(cs customStruct) bool { return cs.int == 2 },
+			want: []customStruct{{int: 2}},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got := Filter(tt.s, tt.p)
+				if !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Filter(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
 	})
 
 	t.Run("test for custom alias types", func(t *testing.T) {
