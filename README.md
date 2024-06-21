@@ -9,3 +9,7 @@ _godash_ is a package that aims to make it easier to use Go to deal with everyda
 ## Requirements
 
 Go >= 1.18
+
+## References
+
+[Contributing](CONTRIBUTING.md)

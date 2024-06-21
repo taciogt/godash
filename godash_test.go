@@ -1,8 +1,17 @@
 package godash
 
 import (
+	"reflect"
+	"strings"
 	"testing"
 )
+
+type customStruct struct {
+	int    int
+	string string
+}
+
+type typeAlias int
 
 func TestEvery(t *testing.T) {
 	t.Run("integer slices", func(t *testing.T) {
@@ -98,11 +107,6 @@ func TestEvery(t *testing.T) {
 	})
 
 	t.Run("slices of a custom struct", func(t *testing.T) {
-		type customStruct struct {
-			int    int
-			string string
-		}
-
 		tests := []struct {
 			name string
 			s    []customStruct
@@ -138,6 +142,188 @@ func TestEvery(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("slices of a type alias", func(t *testing.T) {
+		greaterThanZero := func(i typeAlias) bool {
+			return i > 0
+		}
+
+		tests := []struct {
+			name string
+			s    []typeAlias
+			p    func(alias typeAlias) bool
+			want bool
+		}{{
+			name: "every int field is greater than zero",
+			s:    []typeAlias{1, 2, 3},
+			p:    greaterThanZero,
+			want: true,
+		}, {
+			name: "not every int field is greater than zero",
+			s:    []typeAlias{-1, 0, -1},
+			p:    greaterThanZero,
+			want: false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := Every(tt.s, tt.p); got != tt.want {
+					t.Errorf("Every(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
+	})
+}
+
+func TestFilter(t *testing.T) {
+	t.Run("tests for slices of integers", func(t *testing.T) {
+		greaterThanFive := func(value int) bool {
+			return value > 5
+		}
+
+		isEven := func(value int) bool {
+			return value%2 == 0
+		}
+
+		tests := []struct {
+			name     string
+			source   []int
+			pred     Predicate[int]
+			expected []int
+		}{{
+			name:     "empty slice",
+			source:   []int{},
+			pred:     greaterThanFive,
+			expected: []int{},
+		}, {
+			name:     "all elements are greater than five",
+			source:   []int{6, 7, 9, 11},
+			pred:     greaterThanFive,
+			expected: []int{6, 7, 9, 11},
+		}, {
+			name:     "non existent greater than five",
+			source:   []int{1, 2, 3, 4, 5},
+			pred:     greaterThanFive,
+			expected: []int{},
+		}, {
+			name:     "partial greater than five",
+			source:   []int{1, 6, 3, 7},
+			pred:     greaterThanFive,
+			expected: []int{6, 7},
+		}, {
+			name:     "all elements even",
+			source:   []int{2, 4, 6, 8},
+			pred:     isEven,
+			expected: []int{2, 4, 6, 8},
+		}, {
+			name:     "no even elements",
+			source:   []int{1, 3, 5, 7},
+			pred:     isEven,
+			expected: []int{},
+		}, {
+			name:     "some even elements",
+			source:   []int{1, 2, 3, 4},
+			pred:     isEven,
+			expected: []int{2, 4},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				result := Filter(tt.source, tt.pred)
+				if !reflect.DeepEqual(result, tt.expected) {
+					t.Errorf("got %v, want %v", result, tt.expected)
+				}
+			})
+		}
+	})
+
+	t.Run("test for string slices", func(t *testing.T) {
+		stringsWithLetterA := func(s string) bool {
+			return strings.Contains(s, "a")
+		}
+
+		tests := []struct {
+			name  string
+			slice []string
+			p     Predicate[string]
+			want  []string
+		}{{
+			name:  "some strings with letter a",
+			slice: []string{"a", "bacon", "no first letter"},
+			p:     stringsWithLetterA,
+			want:  []string{"a", "bacon"},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				result := Filter(tt.slice, tt.p)
+				if !reflect.DeepEqual(result, tt.want) {
+					t.Errorf("got %v, want %v", result, tt.want)
+				}
+			})
+		}
+
+	})
+
+	t.Run("test for custom struct slices", func(t *testing.T) {
+		tests := []struct {
+			name string
+			s    []customStruct
+			p    func(customStruct) bool
+			want []customStruct
+		}{{
+			name: "all elements",
+			s:    []customStruct{{int: 1}, {int: 2}},
+			p:    func(cs customStruct) bool { return true },
+			want: []customStruct{{int: 1}, {int: 2}},
+		}, {
+			name: "only the middle one",
+			s:    []customStruct{{int: 1}, {int: 2}, {int: 0}},
+			p:    func(cs customStruct) bool { return cs.int == 2 },
+			want: []customStruct{{int: 2}},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got := Filter(tt.s, tt.p)
+				if !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Filter(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
+	})
+
+	t.Run("test for custom alias types", func(t *testing.T) {
+		greaterThanZero := func(i typeAlias) bool {
+			return i > 0
+		}
+
+		tests := []struct {
+			name string
+			s    []typeAlias
+			p    func(i typeAlias) bool
+			want []typeAlias
+		}{{
+			name: "all elements are greater than zero",
+			s:    []typeAlias{1, 2, 3},
+			p:    greaterThanZero,
+			want: []typeAlias{1, 2, 3},
+		}, {
+			name: "only the last one is greater than zero",
+			s:    []typeAlias{-1, 0, 1},
+			p:    greaterThanZero,
+			want: []typeAlias{1},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got := Filter(tt.s, tt.p)
+				if !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Filter(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
+	})
 }
 
 func TestFind(t *testing.T) {
@@ -152,7 +338,7 @@ func TestFind(t *testing.T) {
 	})
 
 	t.Run("a string slice and a predicate that finds something", func(t *testing.T) {
-		s := []string{"a", "bc", "def", "hijk"}
+		s := []string{"a", "bc", "def", "1234"}
 		predicate := func(s string) bool { return len(s) == 3 }
 
 		result, ok := Find(s, predicate)
@@ -173,6 +359,10 @@ func TestFind(t *testing.T) {
 
 	t.Run("slices of a custom struct", func(t *testing.T) {
 		// TODO: implement this test
+	})
+
+	t.Run("slices of a type alias", func(t *testing.T) {
+		// TODO
 	})
 }
 
@@ -202,5 +392,9 @@ func TestFindIndex(t *testing.T) {
 				}
 			})
 		}
+	})
+
+	t.Run("slices of a type alias", func(t *testing.T) {
+		// TODO
 	})
 }
