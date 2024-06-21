@@ -294,7 +294,35 @@ func TestFilter(t *testing.T) {
 	})
 
 	t.Run("test for custom alias types", func(t *testing.T) {
-		// TODO: implement these tests
+		greaterThanZero := func(i typeAlias) bool {
+			return i > 0
+		}
+
+		tests := []struct {
+			name string
+			s    []typeAlias
+			p    func(i typeAlias) bool
+			want []typeAlias
+		}{{
+			name: "all elements are greater than zero",
+			s:    []typeAlias{1, 2, 3},
+			p:    greaterThanZero,
+			want: []typeAlias{1, 2, 3},
+		}, {
+			name: "only the last one is greater than zero",
+			s:    []typeAlias{-1, 0, 1},
+			p:    greaterThanZero,
+			want: []typeAlias{1},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got := Filter(tt.s, tt.p)
+				if !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Filter(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
 	})
 }
 
