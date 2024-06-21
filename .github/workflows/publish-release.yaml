@@ -1,0 +1,24 @@
+name: Publish Release
+on:
+  release:
+    types: [published]
+
+jobs:
+  run-go-tests:
+    name: Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup Go Environment
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22
+          check-latest: true
+      - name: Go Tidy
+        run: go mod tidy
+      - name: Run Tests
+        run: make test
+      - name: Go List
+        run: GOPROXY=proxy.golang.org go list -m github.com/taciogt/godash@${{ github.ref_name }}
