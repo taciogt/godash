@@ -25,5 +25,5 @@ $(COVERAGE_OUT): *.go
 coverage-report: $(COVERAGE_OUT)
 	$(GOTOOL) cover -html=coverage.out
 
-doc: setup  ## Generate the project docs and make them available at http://localhost:6060/pkg/github.com/taciogt/godash
+doc:  ## Generate the project docs and make them available at http://localhost:6060/pkg/github.com/taciogt/godash
 	godoc -http=:6060
