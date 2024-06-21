@@ -11,6 +11,8 @@ type customStruct struct {
 	string string
 }
 
+type typeAlias int
+
 func TestEvery(t *testing.T) {
 	t.Run("integer slices", func(t *testing.T) {
 		even := func(n int) bool { return n%2 == 0 }
@@ -142,7 +144,34 @@ func TestEvery(t *testing.T) {
 	})
 
 	t.Run("slices of a type alias", func(t *testing.T) {
-		// TODO
+		greaterThanZero := func(i typeAlias) bool {
+			return i > 0
+		}
+
+		tests := []struct {
+			name string
+			s    []typeAlias
+			p    func(alias typeAlias) bool
+			want bool
+		}{{
+			name: "every int field is greater than zero",
+			s:    []typeAlias{1, 2, 3},
+			p:    greaterThanZero,
+			want: true,
+		}, {
+			name: "not every int field is greater than zero",
+			s:    []typeAlias{-1, 0, -1},
+			p:    greaterThanZero,
+			want: false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := Every(tt.s, tt.p); got != tt.want {
+					t.Errorf("Every(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+			})
+		}
 	})
 }
 
