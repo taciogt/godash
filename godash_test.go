@@ -1,7 +1,9 @@
 package godash
 
 import (
+	"errors"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -397,4 +399,50 @@ func TestFindIndex(t *testing.T) {
 	t.Run("slices of a type alias", func(t *testing.T) {
 		// TODO
 	})
+}
+
+func TestMap(t *testing.T) {
+	tt := []struct {
+		name     string
+		input    []int
+		expected []string
+		mapper   func(int) (string, error)
+		err      error
+	}{{
+		name:     "simple",
+		input:    []int{1, 2, 3},
+		expected: []string{"2", "4", "6"},
+		mapper: func(i int) (string, error) {
+			return strconv.Itoa(i * 2), nil
+		},
+		err: nil,
+	}, {
+		name:     "empty input",
+		input:    []int{},
+		expected: []string{},
+		mapper: func(i int) (string, error) {
+			return strconv.Itoa(i), nil
+		},
+		err: nil,
+	}, {
+		name:     "mapper error",
+		input:    []int{1, 2, 3},
+		expected: nil,
+		mapper: func(i int) (string, error) {
+			return "", errors.New("error")
+		},
+		err: errors.New("error"),
+	}}
+
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			actual, err := Map(tc.input, tc.mapper)
+			if !reflect.DeepEqual(tc.expected, actual) {
+				t.Errorf("expected %v, got %v", tc.expected, actual)
+			}
+			if !reflect.DeepEqual(tc.err, err) {
+				t.Errorf("expected err %v, got %v", tc.err, err)
+			}
+		})
+	}
 }

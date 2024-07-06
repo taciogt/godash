@@ -50,3 +50,19 @@ func Find[T any, S ~[]T](s S, p func(T) bool) (T, bool) {
 	var zero T
 	return zero, false
 }
+
+// Map takes in a slice of input values and a mapper function, and applies the mapper function to each
+// input value. It returns a new slice containing the mapped values. If any error occurs during the mapping
+// process, the function aborts and returns nil along with the error. Otherwise, it returns the new slice
+// of mapped values and a nil error.
+func Map[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) (TOutput, error)) ([]TOutput, error) {
+	result := make([]TOutput, len(s))
+	for i, value := range s {
+		mapped, err := mapper(value)
+		if err != nil {
+			return nil, err
+		}
+		result[i] = mapped
+	}
+	return result, nil
+}
