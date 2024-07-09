@@ -12,7 +12,7 @@ type Predicate[T any] func(T) bool
 
 // Every returns true if every element in the given slice satisfies the provided predicate function.
 // Otherwise, it returns false.
-func Every[T any](s Slice[T], p func(T) bool) bool {
+func Every[T any](s Slice[T], p Predicate[T]) bool {
 	for _, v := range s {
 		if !p(v) {
 			return false
@@ -21,7 +21,7 @@ func Every[T any](s Slice[T], p func(T) bool) bool {
 	return true
 }
 
-func (s Slice[T]) Every(p func(T) bool) bool {
+func (s Slice[T]) Every(p Predicate[T]) bool {
 	return Every(s, p)
 }
 
@@ -39,7 +39,7 @@ func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
 // FindIndex returns the index of the first element in the given slice that satisfies
 // the provided predicate function. If no element satisfies the predicate,
 // -1 is returned along with false.
-func FindIndex[T any, S ~[]T](s S, p func(T) bool) (int, bool) {
+func FindIndex[T any, S ~[]T](s S, p Predicate[T]) (int, bool) {
 	for i, v := range s {
 		if p(v) {
 			return i, true
@@ -50,7 +50,7 @@ func FindIndex[T any, S ~[]T](s S, p func(T) bool) (int, bool) {
 
 // Find returns the first element in the given slice that satisfies the provided predicate function.
 // If no element satisfies the predicate, the zero value of the element type is returned along with false.
-func Find[T any, S ~[]T](s S, p func(T) bool) (T, bool) {
+func Find[T any, S ~[]T](s S, p Predicate[T]) (T, bool) {
 	if i, ok := FindIndex(s, p); ok {
 		return s[i], true
 	}
