@@ -66,3 +66,16 @@ func Map[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) (TOutput
 	}
 	return result, nil
 }
+
+func Reduce[TIn any, TOut any, S ~[]TIn](s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut) (TOut, error) {
+	result := initialValue
+	var err error
+	for _, v := range s {
+		result, err = reducer(result, v)
+		if err != nil {
+			return result, err
+		}
+	}
+
+	return result, nil
+}

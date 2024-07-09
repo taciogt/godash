@@ -446,3 +446,85 @@ func TestMap(t *testing.T) {
 		})
 	}
 }
+
+func TestReduce(t *testing.T) {
+	type inputs struct {
+		slice        []int
+		reducer      func(int, int) (int, error)
+		initialValue int
+	}
+	type expected struct {
+		result int
+		error  error
+	}
+
+	expectedErr := errors.New("intentional reducer error")
+
+	tests := []struct {
+		name                string
+		inputArray          []int
+		reducerFunc         func(int, int) (int, error)
+		initialValue        int
+		expectedResult      int
+		expectedErrorIsNill bool
+
+		inputs   inputs
+		expected expected
+	}{{
+		name: "EmptyInput",
+		inputs: inputs{
+			slice:        []int{},
+			reducer:      func(acc, cur int) (int, error) { return acc + cur, nil },
+			initialValue: 100,
+		},
+		expected: expected{
+			result: 100,
+			error:  nil,
+		},
+	}, {
+		name: "SingleElementInput",
+		inputs: inputs{
+			slice:        []int{2},
+			reducer:      func(acc, cur int) (int, error) { return acc * cur, nil },
+			initialValue: 10,
+		},
+		expected: expected{
+			result: 20,
+			error:  nil,
+		},
+	}, {
+		name: "MultipleElementInput",
+		inputs: inputs{
+			slice:        []int{2, 3, 4},
+			reducer:      func(acc, cur int) (int, error) { return acc + cur, nil },
+			initialValue: 10,
+		},
+		expected: expected{
+			result: 19,
+			error:  nil,
+		},
+	}, {
+		name: "ErrorPropagation",
+		inputs: inputs{
+			slice:        []int{2, 3, 4},
+			reducer:      func(acc, cur int) (int, error) { return 0, expectedErr },
+			initialValue: 0,
+		},
+		expected: expected{
+			result: 0,
+			error:  expectedErr,
+		},
+	}}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result, err := Reduce(test.inputs.slice, test.inputs.reducer, test.inputs.initialValue)
+			if result != test.expected.result {
+				t.Errorf("expected %v, got %v", test.expected.result, result)
+			}
+			if !errors.Is(err, test.expected.error) {
+				t.Errorf("expected error %v, but got %v", test.expected.error, err)
+			}
+		})
+	}
+}
