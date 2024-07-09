@@ -62,6 +62,10 @@ func TestEvery(t *testing.T) {
 				if got := Every(tt.s, tt.p); got != tt.want {
 					t.Errorf("Every(%v) = %v, want %v", tt.s, got, tt.want)
 				}
+
+				if got := tt.s.Every(tt.p); got != tt.want {
+					t.Errorf("s.Every(%v) = %v, want %v", tt.s, got, tt.want)
+				}
 			})
 		}
 	})
@@ -104,6 +108,11 @@ func TestEvery(t *testing.T) {
 				if got := Every(tt.s, tt.p); got != tt.want {
 					t.Errorf("Every(%v) = %v, want %v", tt.s, got, tt.want)
 				}
+
+				s := NewSlice(tt.s...)
+				if got := s.Every(tt.p); got != tt.want {
+					t.Errorf("s.Every(%v) = %v, want %v", tt.s, got, tt.want)
+				}
 			})
 		}
 	})
@@ -140,6 +149,11 @@ func TestEvery(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				if got := Every(tt.s, tt.p); got != tt.want {
 					t.Errorf("Every(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+
+				s := NewSlice(tt.s...)
+				if got := s.Every(tt.p); got != tt.want {
+					t.Errorf("s.Every(%v) = %v, want %v", tt.s, got, tt.want)
 				}
 			})
 		}

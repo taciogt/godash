@@ -4,6 +4,10 @@ package godash
 
 type Slice[T any] []T
 
+func NewSlice[T any](elems ...T) Slice[T] {
+	return elems
+}
+
 type Predicate[T any] func(T) bool
 
 // Every returns true if every element in the given slice satisfies the provided predicate function.
@@ -15,6 +19,10 @@ func Every[T any](s Slice[T], p func(T) bool) bool {
 		}
 	}
 	return true
+}
+
+func (s Slice[T]) Every(p func(T) bool) bool {
+	return Every(s, p)
 }
 
 // Filter returns a new slice containing only the elements from the given slice that satisfy the provided predicate function.
