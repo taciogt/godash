@@ -38,3 +38,14 @@ func ExampleMap() {
 	// Output:
 	// [0 2 4 6 8] <nil>
 }
+
+func ExampleReduce() {
+	sum := func(acc int, curr int) (int, error) {
+		return acc + curr, nil
+	}
+	input := []int{1, 2, 3, 4}
+
+	fmt.Println(Reduce(input, sum, 0))
+	// Output:
+	// 10 <nil>
+}

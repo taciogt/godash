@@ -67,6 +67,11 @@ func Map[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) (TOutput
 	return result, nil
 }
 
+// Reduce iterates over the elements in the slice and applies the reducer function to each element,
+// accumulating the result in the initial value. It returns the final accumulated value and an error,
+// if any occurred during the reduction process. The reducer function takes two arguments: the current
+// accumulated value and the current element value, and returns the updated accumulated value and an
+// error, if any occurred.
 func Reduce[TIn any, TOut any, S ~[]TIn](s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut) (TOut, error) {
 	result := initialValue
 	var err error
