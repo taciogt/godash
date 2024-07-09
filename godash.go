@@ -21,6 +21,18 @@ func Every[T any](s Slice[T], p Predicate[T]) bool {
 	return true
 }
 
+// Every returns true if every element in the given slice satisfies the provided predicate function.
+// Otherwise, it returns false.
+//
+// Usage example:
+//
+//	isEven := func(i int) bool { return i%2 == 0 }
+//
+//	allEvens := []int{-2, 0, 2, 4}
+//	fmt.Println(Every(allEvens, isEven))
+//
+//	someEvens := NewSlice(0, 1, 2, 3, 4)
+//	fmt.Println(someEvens.Every(isEven))
 func (s Slice[T]) Every(p Predicate[T]) bool {
 	return Every(s, p)
 }
@@ -34,6 +46,10 @@ func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
 		}
 	}
 	return result
+}
+
+func (s Slice[T]) Filter(p Predicate[T]) Slice[T] {
+	return Filter(s, p)
 }
 
 // FindIndex returns the index of the first element in the given slice that satisfies

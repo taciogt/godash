@@ -249,6 +249,13 @@ func TestFilter(t *testing.T) {
 				if !reflect.DeepEqual(result, tt.expected) {
 					t.Errorf("got %v, want %v", result, tt.expected)
 				}
+
+				s := NewSlice(tt.source...)
+				expectedSlice := NewSlice(tt.expected...)
+				resultSlice := s.Filter(tt.pred)
+				if !reflect.DeepEqual(resultSlice, expectedSlice) {
+					t.Errorf("got %v, want %v", resultSlice, expectedSlice)
+				}
 			})
 		}
 	})
@@ -275,6 +282,13 @@ func TestFilter(t *testing.T) {
 				result := Filter(tt.slice, tt.p)
 				if !reflect.DeepEqual(result, tt.want) {
 					t.Errorf("got %v, want %v", result, tt.want)
+				}
+
+				s := NewSlice(tt.slice...)
+				expectedSlice := NewSlice(tt.want...)
+				resultSlice := s.Filter(tt.p)
+				if !reflect.DeepEqual(resultSlice, expectedSlice) {
+					t.Errorf("got %v, want %v", resultSlice, expectedSlice)
 				}
 			})
 		}
@@ -304,6 +318,13 @@ func TestFilter(t *testing.T) {
 				got := Filter(tt.s, tt.p)
 				if !reflect.DeepEqual(got, tt.want) {
 					t.Errorf("Filter(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+
+				s := NewSlice(tt.s...)
+				expectedSlice := NewSlice(tt.want...)
+				resultSlice := s.Filter(tt.p)
+				if !reflect.DeepEqual(resultSlice, expectedSlice) {
+					t.Errorf("got %v, want %v", resultSlice, expectedSlice)
 				}
 			})
 		}
