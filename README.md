@@ -12,7 +12,7 @@ _godash_ is a Go package that aims to make it easier to deal with common operati
 
 ## Requirements
 
-Go >= 1.18
+Go >= 1.19
 
 ## Documentation
 
