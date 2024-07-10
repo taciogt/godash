@@ -15,34 +15,6 @@ func Example() {
 	// [1 2 3 4]
 }
 
-func ExampleEvery() {
-	isEven := func(i int) bool { return i%2 == 0 }
-
-	allEvens := []int{-2, 0, 2, 4}
-	fmt.Println(Every(allEvens, isEven))
-
-	someEvens := NewSlice(0, 1, 2, 3, 4)
-	fmt.Println(someEvens.Every(isEven))
-	// Output:
-	// true
-	// false
-}
-
-func ExampleFilter() {
-	s := []int{-3, -2, -1, 0, 1, 2, 3}
-	isGreaterThanZero := func(n int) bool {
-		return n > 0
-	}
-
-	filtered := Filter(s, isGreaterThanZero)
-	fmt.Println(filtered)
-
-	fmt.Println(NewSlice(s...).Filter(isGreaterThanZero))
-	// Output:
-	// [1 2 3]
-	// [1 2 3]
-}
-
 func ExampleMap() {
 	doubleToString := func(i int) (string, error) {
 		return strconv.Itoa(i * 2), nil

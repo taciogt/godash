@@ -22,18 +22,14 @@ func Every[T any](s Slice[T], p Predicate[T]) bool {
 	return true
 }
 
-// Every returns true if every element in the given slice satisfies the provided predicate function.
-// Otherwise, it returns false.
+// Every method calls the [Every] function on the slice on which it is called.
 //
 // Usage example:
 //
-//	isEven := func(i int) bool { return i%2 == 0 }
-//
-//	allEvens := []int{-2, 0, 2, 4}
-//	fmt.Println(Every(allEvens, isEven))
-//
-//	someEvens := NewSlice(0, 1, 2, 3, 4)
-//	fmt.Println(someEvens.Every(isEven))
+// isEven := func(i int) bool { return i%2 == 0 }
+// s := godash.NewSlice(0, 1, 2, 3, 4)
+// fmt.Println(s.Every(isEven))
+// Output: false
 func (s Slice[T]) Every(p Predicate[T]) bool {
 	return Every(s, p)
 }
@@ -49,10 +45,6 @@ func (s Slice[T]) Every(p Predicate[T]) bool {
 //	filtered := Filter(s, isGreaterThanZero)
 //	fmt.Println(filtered)
 //	// Output: [1 2 3 4]
-//
-//	filteredSlice := NewSlice(s...).Filter(isGreaterThanZero)
-//	fmt.Println(filteredSlice)
-//	// Output: [1 2 3 4]
 func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
 	result := make([]T, 0)
 	for _, v := range s {
@@ -63,8 +55,16 @@ func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
 	return result
 }
 
-// Filter applies a predicate function to each element of the slice over which it is called upon.
-// Check [Filter] for details.
+// Filter method calls the [Filter] function on the slice over which it is called upon.
+//
+// Usage example:
+//
+// s := godash.NewSlice(-2, -1, 0, 1, 2, 3, 4)
+// isGreaterThanZero := func(i int) bool { return i > 0 }
+//
+//	filtered := s.Filter(isGreaterThanZero)
+//	fmt.Println(filteredSlice)
+//	// Output: [1 2 3 4]
 func (s Slice[T]) Filter(p Predicate[T]) Slice[T] {
 	return Filter(s, p)
 }
