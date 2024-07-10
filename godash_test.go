@@ -427,6 +427,12 @@ func TestFindIndex(t *testing.T) {
 				if gotIndex != tt.wantIndex || gotBool != tt.wantBool {
 					t.Errorf("FindIndex() = %v, %v; want %v, %v", gotIndex, gotBool, tt.wantIndex, tt.wantBool)
 				}
+
+				s := NewSlice(tt.arr...)
+				gotSliceIndex, gotSliceBool := s.FindIndex(tt.predicate)
+				if gotSliceIndex != tt.wantIndex || gotSliceBool != tt.wantBool {
+					t.Errorf("FindIndex() = %v, %v; want %v, %v", gotSliceIndex, gotSliceBool, tt.wantIndex, tt.wantBool)
+				}
 			})
 		}
 	})

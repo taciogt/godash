@@ -22,29 +22,13 @@ func Every[T any](s Slice[T], p Predicate[T]) bool {
 	return true
 }
 
-// Every method calls the [Every] function on the slice on which it is called.
-//
-// Usage example:
-//
-// isEven := func(i int) bool { return i%2 == 0 }
-// s := godash.NewSlice(0, 1, 2, 3, 4)
-// fmt.Println(s.Every(isEven))
-// Output: false
+// Every behaves exactly as the [Every] function, except it is called directly on the slice to be checked.
 func (s Slice[T]) Every(p Predicate[T]) bool {
 	return Every(s, p)
 }
 
 // Filter applies a predicate function to each element in the given slice and returns a new slice
 // containing only the elements for which the predicate function returns true.
-//
-// Usage example:
-//
-//	s := []int{-2, -1, 0, 1, 2, 3, 4}
-//	isGreaterThanZero := func(i int) bool { return i > 0 }
-//
-//	filtered := Filter(s, isGreaterThanZero)
-//	fmt.Println(filtered)
-//	// Output: [1 2 3 4]
 func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
 	result := make([]T, 0)
 	for _, v := range s {
@@ -55,16 +39,7 @@ func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
 	return result
 }
 
-// Filter method calls the [Filter] function on the slice over which it is called upon.
-//
-// Usage example:
-//
-// s := godash.NewSlice(-2, -1, 0, 1, 2, 3, 4)
-// isGreaterThanZero := func(i int) bool { return i > 0 }
-//
-//	filtered := s.Filter(isGreaterThanZero)
-//	fmt.Println(filteredSlice)
-//	// Output: [1 2 3 4]
+// Filter behaves exactly as the [Filter] function, except it is called directly on the slice to be filtered.
 func (s Slice[T]) Filter(p Predicate[T]) Slice[T] {
 	return Filter(s, p)
 }
@@ -79,6 +54,11 @@ func FindIndex[T any, S ~[]T](s S, p Predicate[T]) (int, bool) {
 		}
 	}
 	return -1, false
+}
+
+// FindIndex behaves exactly as the [FindIndex] function, except it is called directly on the slice to be searched.
+func (s Slice[T]) FindIndex(p Predicate[T]) (int, bool) {
+	return FindIndex(s, p)
 }
 
 // Find returns the first element in the given slice that satisfies the provided predicate function.

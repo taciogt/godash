@@ -49,3 +49,27 @@ func ExampleSlice_Filter() {
 	// Output:
 	// [1 2 3]
 }
+
+func ExampleFindIndex() {
+	s := []string{"a", "ab", "abc", "abcd"}
+	findTrigram := func(s string) bool {
+		return len(s) == 3
+	}
+
+	idx, ok := godash.FindIndex(s, findTrigram)
+	fmt.Println(idx, ok)
+	// Output:
+	// 2 true
+}
+
+func ExampleSlice_FindIndex() {
+	s := godash.NewSlice("a", "ab", "abc", "abcd")
+	findTrigram := func(s string) bool {
+		return len(s) == 3
+	}
+
+	idx, ok := s.FindIndex(findTrigram)
+	fmt.Println(idx, ok)
+	// Output:
+	// 2 true
+}
