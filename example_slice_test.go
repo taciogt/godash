@@ -3,6 +3,7 @@ package godash_test
 import (
 	"fmt"
 	"github.com/taciogt/godash"
+	"strings"
 )
 
 func ExampleEvery() {
@@ -72,4 +73,28 @@ func ExampleSlice_FindIndex() {
 	fmt.Println(idx, ok)
 	// Output:
 	// 2 true
+}
+
+func ExampleFind() {
+	s := []string{"A", "Ab", "aBc", "ab-cd", "efg"}
+	isLowerCase := func(s string) bool {
+		return strings.ToLower(s) == s
+	}
+
+	result, ok := godash.Find(s, isLowerCase)
+	fmt.Println(result, ok)
+	// Output:
+	// ab-cd true
+}
+
+func ExampleSlice_Find() {
+	s := godash.NewSlice("A", "Ab", "aBc", "abc")
+	isLowerCase := func(s string) bool {
+		return strings.ToLower(s) == s
+	}
+
+	result, ok := s.Find(isLowerCase)
+	fmt.Println(result, ok)
+	// Output:
+	// abc true
 }

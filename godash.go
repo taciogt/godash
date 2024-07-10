@@ -72,6 +72,11 @@ func Find[T any, S ~[]T](s S, p Predicate[T]) (T, bool) {
 	return zero, false
 }
 
+// Find behaves exactly as the [Find] function, except it is called directly on the slice to be searched.
+func (s Slice[T]) Find(p Predicate[T]) (T, bool) {
+	return Find(s, p)
+}
+
 // Map takes in a slice of input values and a mapper function, and applies the mapper function to each
 // input value. It returns a new slice containing the mapped values. If any error occurs during the mapping
 // process, the function aborts and returns nil along with the error. Otherwise, it returns the new slice
