@@ -1,5 +1,6 @@
-/*Package godash provides a set of modular and generic functions to manipulate common data structures.
- */
+/*
+Package godash provides a set of modular and generic functions to manipulate common data structures.
+*/
 package godash
 
 type Slice[T any] []T
@@ -37,7 +38,21 @@ func (s Slice[T]) Every(p Predicate[T]) bool {
 	return Every(s, p)
 }
 
-// Filter returns a new slice containing only the elements from the given slice that satisfy the provided predicate function.
+// Filter applies a predicate function to each element in the given slice and returns a new slice
+// containing only the elements for which the predicate function returns true.
+//
+// Usage example:
+//
+//	s := []int{-2, -1, 0, 1, 2, 3, 4}
+//	isGreaterThanZero := func(i int) bool { return i > 0 }
+//
+//	filtered := Filter(s, isGreaterThanZero)
+//	fmt.Println(filtered)
+//	// Output: [1 2 3 4]
+//
+//	filteredSlice := NewSlice(s...).Filter(isGreaterThanZero)
+//	fmt.Println(filteredSlice)
+//	// Output: [1 2 3 4]
 func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
 	result := make([]T, 0)
 	for _, v := range s {
@@ -48,6 +63,8 @@ func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
 	return result
 }
 
+// Filter applies a predicate function to each element of the slice over which it is called upon.
+// Check [Filter] for details.
 func (s Slice[T]) Filter(p Predicate[T]) Slice[T] {
 	return Filter(s, p)
 }

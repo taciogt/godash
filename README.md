@@ -8,11 +8,15 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/86a0ff7430d54e0fa614195978c09213)](https://app.codacy.com/gh/taciogt/godash/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/86a0ff7430d54e0fa614195978c09213)](https://app.codacy.com/gh/taciogt/godash/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
-_godash_ is a package that aims to make it easier to use Go to deal with everyday types like slices and maps. It is loosely inspired by the famous JS library [lodash](https://lodash.com/). 
+_godash_ is a Go package that aims to make it easier to deal with common operations on everyday types like slices and maps. 
 
 ## Requirements
 
 Go >= 1.18
+
+## Documentation
+
+Check the [documentation here](https://pkg.go.dev/github.com/taciogt/godash).
 
 ## References
 

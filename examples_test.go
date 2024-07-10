@@ -28,6 +28,21 @@ func ExampleEvery() {
 	// false
 }
 
+func ExampleFilter() {
+	s := []int{-3, -2, -1, 0, 1, 2, 3}
+	isGreaterThanZero := func(n int) bool {
+		return n > 0
+	}
+
+	filtered := Filter(s, isGreaterThanZero)
+	fmt.Println(filtered)
+
+	fmt.Println(NewSlice(s...).Filter(isGreaterThanZero))
+	// Output:
+	// [1 2 3]
+	// [1 2 3]
+}
+
 func ExampleMap() {
 	doubleToString := func(i int) (string, error) {
 		return strconv.Itoa(i * 2), nil
