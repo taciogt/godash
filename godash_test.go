@@ -249,6 +249,13 @@ func TestFilter(t *testing.T) {
 				if !reflect.DeepEqual(result, tt.expected) {
 					t.Errorf("got %v, want %v", result, tt.expected)
 				}
+
+				s := NewSlice(tt.source...)
+				expectedSlice := NewSlice(tt.expected...)
+				resultSlice := s.Filter(tt.pred)
+				if !reflect.DeepEqual(resultSlice, expectedSlice) {
+					t.Errorf("got %v, want %v", resultSlice, expectedSlice)
+				}
 			})
 		}
 	})
@@ -275,6 +282,13 @@ func TestFilter(t *testing.T) {
 				result := Filter(tt.slice, tt.p)
 				if !reflect.DeepEqual(result, tt.want) {
 					t.Errorf("got %v, want %v", result, tt.want)
+				}
+
+				s := NewSlice(tt.slice...)
+				expectedSlice := NewSlice(tt.want...)
+				resultSlice := s.Filter(tt.p)
+				if !reflect.DeepEqual(resultSlice, expectedSlice) {
+					t.Errorf("got %v, want %v", resultSlice, expectedSlice)
 				}
 			})
 		}
@@ -304,6 +318,13 @@ func TestFilter(t *testing.T) {
 				got := Filter(tt.s, tt.p)
 				if !reflect.DeepEqual(got, tt.want) {
 					t.Errorf("Filter(%v) = %v, want %v", tt.s, got, tt.want)
+				}
+
+				s := NewSlice(tt.s...)
+				expectedSlice := NewSlice(tt.want...)
+				resultSlice := s.Filter(tt.p)
+				if !reflect.DeepEqual(resultSlice, expectedSlice) {
+					t.Errorf("got %v, want %v", resultSlice, expectedSlice)
 				}
 			})
 		}
@@ -405,6 +426,12 @@ func TestFindIndex(t *testing.T) {
 				gotIndex, gotBool := FindIndex(tt.arr, tt.predicate)
 				if gotIndex != tt.wantIndex || gotBool != tt.wantBool {
 					t.Errorf("FindIndex() = %v, %v; want %v, %v", gotIndex, gotBool, tt.wantIndex, tt.wantBool)
+				}
+
+				s := NewSlice(tt.arr...)
+				gotSliceIndex, gotSliceBool := s.FindIndex(tt.predicate)
+				if gotSliceIndex != tt.wantIndex || gotSliceBool != tt.wantBool {
+					t.Errorf("FindIndex() = %v, %v; want %v, %v", gotSliceIndex, gotSliceBool, tt.wantIndex, tt.wantBool)
 				}
 			})
 		}
