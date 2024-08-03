@@ -94,6 +94,11 @@ func ForEach[T any, S ~[]T](s S, f func(i int, v T)) {
 	}
 }
 
+// ForEach behaves exactly like [ForEach] function, except it is called directly on the slice.
+func (s Slice[T]) ForEach(f func(i int, v T)) {
+	ForEach(s, f)
+}
+
 // Map takes in a slice of input values and a mapper function, and applies the mapper function to each
 // input value. It returns a new slice containing the mapped values. If any error occurs during the mapping
 // process, the function aborts and returns nil along with the error. Otherwise, it returns the new slice
