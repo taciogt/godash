@@ -34,6 +34,12 @@ func (s *Set[T]) Add(element T) {
 	(*s)[element] = struct{}{}
 }
 
+// String returns a string representation of the set.
+// The elements in the set are joined by commas and surrounded by curly braces.
+// The elements are sorted in ascending order before joining.
+// The string representation that is returned is in the format: "set{element1, element2, ...}"
+// The order of the elements guaranteed to make troubleshooting easier.
+// The elements are converted to strings using the format "%v".
 func (s *Set[T]) String() string {
 	elements := s.Values()
 	elementsStr := make([]string, len(elements))
