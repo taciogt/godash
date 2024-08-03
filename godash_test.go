@@ -442,6 +442,57 @@ func TestFindIndex(t *testing.T) {
 	})
 }
 
+func TestForEach(t *testing.T) {
+	noOp := func(_ *testing.T, _ []int) {}
+	traversedItems := make([][]int, 0)
+
+	tests := []struct {
+		name      string
+		input     []int
+		processFn func(i int, v int)
+		expected  func(t *testing.T, input []int)
+	}{{
+		name:  "empty slice",
+		input: []int{},
+		processFn: func(i int, v int) {
+			t.Error("function called for empty slice")
+		},
+		expected: noOp,
+	}, {
+		name:  "function doesn't change input",
+		input: []int{5},
+		processFn: func(i int, v int) {
+			v *= 2
+		},
+		expected: func(t *testing.T, input []int) {
+			if !reflect.DeepEqual(input, []int{5}) {
+				t.Error("function should not change input slice")
+			}
+		},
+	}, {
+		name:  "function traverse through all input items",
+		input: []int{1, 2, 3},
+		processFn: func(i int, v int) {
+			traversedItems = append(traversedItems, []int{i, v})
+		},
+		expected: func(t *testing.T, input []int) {
+			expected := [][]int{{0, 1}, {1, 2}, {2, 3}}
+			if !reflect.DeepEqual(traversedItems, expected) {
+				t.Error("function should traverse through all items")
+			}
+		},
+	}}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			output := make([]int, len(test.input))
+			copy(output, test.input)
+			ForEach(output, test.processFn)
+			test.expected(t, output)
+		})
+	}
+}
+
 func TestMap(t *testing.T) {
 	tt := []struct {
 		name     string

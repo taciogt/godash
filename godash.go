@@ -77,6 +77,28 @@ func (s Slice[T]) Find(p Predicate[T]) (T, bool) {
 	return Find(s, p)
 }
 
+// ForEach applies the provided function f to each element in the slice s.
+// The function f should take an index i and a value v as arguments.
+// The index i represents the position of the element in the slice s,
+// and the value v represents the current element.
+// Note that this function does not modify the elements in the slice s.
+// Example usage:
+//
+//	numbers := []int{1, 2, 3, 4, 5}
+//	ForEach(numbers, func(i int, v int) {
+//	    fmt.Printf("index: %d, value: %d\n", i, v)
+//	})
+func ForEach[T any, S ~[]T](s S, f func(i int, v T)) {
+	for i, v := range s {
+		f(i, v)
+	}
+}
+
+// ForEach behaves exactly like [ForEach] function, except it is called directly on the slice.
+func (s Slice[T]) ForEach(f func(i int, v T)) {
+	ForEach(s, f)
+}
+
 // Map takes in a slice of input values and a mapper function, and applies the mapper function to each
 // input value. It returns a new slice containing the mapped values. If any error occurs during the mapping
 // process, the function aborts and returns nil along with the error. Otherwise, it returns the new slice
