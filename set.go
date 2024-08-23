@@ -32,6 +32,11 @@ func (s *Set[T]) Delete(element T) {
 	delete(*s, element)
 }
 
+func (s Set[T]) Has(element T) bool {
+	_, ok := s[element]
+	return ok
+}
+
 // Values returns a slice containing all the elements in the set.
 // These elements won't be returned in any specific order.
 func (s *Set[T]) Values() []T {

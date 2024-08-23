@@ -78,6 +78,38 @@ func TestSet_Delete(t *testing.T) {
 	}
 }
 
+func TestSet_Has(t *testing.T) {
+	tests := []struct {
+		name     string
+		set      Set[int]
+		element  int
+		expected bool
+	}{{
+		name:     "element exists",
+		set:      NewSet[int](1, 2, 3, 4, 5),
+		element:  3,
+		expected: true,
+	}, {
+		name:     "element doesn't exist",
+		set:      NewSet[int](1, 2, 3, 4, 5),
+		element:  6,
+		expected: false,
+	}, {
+		name:     "empty set",
+		set:      NewSet[int](),
+		element:  1,
+		expected: false,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.set.Has(tt.element); got != tt.expected {
+				t.Errorf("Set.Has() = %v, expected %v", got, tt.expected)
+			}
+		})
+	}
+}
+
 func TestValues(t *testing.T) {
 	type test struct {
 		name     string
