@@ -46,6 +46,38 @@ func TestAdd(t *testing.T) {
 	}
 }
 
+func TestSet_Delete(t *testing.T) {
+	tests := []struct {
+		name    string
+		initial Set[int]
+		arg     int
+		want    Set[int]
+	}{{
+		name:    "Delete existing element",
+		initial: NewSet[int](1, 2, 3),
+		arg:     2,
+		want:    NewSet[int](1, 3),
+	}, {
+		name:    "Delete non-existing element",
+		initial: NewSet[int](1, 2, 3),
+		arg:     4,
+		want:    NewSet[int](1, 2, 3),
+	}, {
+		name:    "Delete from empty set",
+		initial: NewSet[int](),
+		arg:     2,
+		want:    NewSet[int](),
+	}}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.initial.Delete(tt.arg)
+			if !reflect.DeepEqual(tt.initial, tt.want) {
+				t.Errorf("Set.Delete() = %v, want %v", tt.initial, tt.want)
+			}
+		})
+	}
+}
+
 func TestValues(t *testing.T) {
 	type test struct {
 		name     string

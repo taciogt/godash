@@ -20,6 +20,18 @@ func NewSet[T setElement](elements ...T) Set[T] {
 	return m
 }
 
+// Add inserts the specified element into the set.
+// If the element already exists in the set, no action is taken.
+func (s *Set[T]) Add(element T) {
+	(*s)[element] = struct{}{}
+}
+
+// Delete removes the specified element from the set.
+// If the element doesn't exist in the set, no action is taken.
+func (s *Set[T]) Delete(element T) {
+	delete(*s, element)
+}
+
 // Values returns a slice containing all the elements in the set.
 // These elements won't be returned in any specific order.
 func (s *Set[T]) Values() []T {
@@ -28,10 +40,6 @@ func (s *Set[T]) Values() []T {
 		result = append(result, key)
 	}
 	return result
-}
-
-func (s *Set[T]) Add(element T) {
-	(*s)[element] = struct{}{}
 }
 
 // String returns a string representation of the set.
