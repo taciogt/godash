@@ -10,6 +10,11 @@ type setElement interface {
 	comparable
 }
 
+// Set is a type that represents a set data structure.
+// It is implemented using a map where the keys represent the elements of the set.
+// The values of the map are of type `struct{}` and don't contain any meaningful data.
+// The `Set` type can be used to store elements of any type that implements the `comparable` interface.
+// The zero value of Set is an empty set.
 type Set[T setElement] map[T]struct{}
 
 func NewSet[T setElement](elements ...T) Set[T] {
