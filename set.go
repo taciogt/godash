@@ -32,6 +32,8 @@ func (s *Set[T]) Delete(element T) {
 	delete(*s, element)
 }
 
+// Has checks if the specified element exists in the set.
+// It returns true if the element exists, otherwise it returns false.
 func (s Set[T]) Has(element T) bool {
 	_, ok := s[element]
 	return ok
