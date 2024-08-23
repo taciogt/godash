@@ -40,7 +40,7 @@ func (s *Set[T]) Add(element T) {
 // The string representation that is returned is in the format: "set{element1, element2, ...}"
 // The order of the elements guaranteed to make troubleshooting easier.
 // The elements are converted to strings using the format "%v".
-func (s *Set[T]) String() string {
+func (s Set[T]) String() string {
 	elements := s.Values()
 	elementsStr := make([]string, len(elements))
 	for i, element := range elements {
