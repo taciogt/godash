@@ -62,7 +62,7 @@ func (s Set[T]) Intersection(s2 Set[T]) Set[T] {
 	result := make(Set[T])
 
 	pivot, other := s, s2
-	if s.Size() > s2.Size() {
+	if pivot.Size() > other.Size() {
 		pivot, other = other, pivot
 	}
 
