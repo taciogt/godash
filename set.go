@@ -78,6 +78,9 @@ func (s Set[T]) Intersection(s2 Set[T]) Set[T] {
 	return result
 }
 
+// Union returns a new set that contains all the elements from the receiver set (s)
+// and the other set (s2). The resulting set does not contain any duplicate elements
+// and is returned as the result. The receiver set (s) and the other set (s2) are not modified.
 func (s Set[T]) Union(s2 Set[T]) Set[T] {
 	result := NewSet[T]()
 
