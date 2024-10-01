@@ -202,6 +202,53 @@ func TestUnion(t *testing.T) {
 	}
 }
 
+func TestSet_Difference(t *testing.T) {
+	tests := []struct {
+		name string
+		s1   Set[int]
+		s2   Set[int]
+		want Set[int]
+	}{
+		{
+			name: "SimpleDifferenceTest1",
+			s1:   NewSet[int](1, 2, 3, 4),
+			s2:   NewSet[int](3, 4, 5, 6),
+			want: NewSet[int](1, 2),
+		},
+		{
+			name: "SimpleDifferenceTest2",
+			s1:   NewSet[int](3, 4, 5, 6),
+			s2:   NewSet[int](1, 2, 3, 4),
+			want: NewSet[int](5, 6),
+		},
+		{
+			name: "NoDifferenceTest",
+			s1:   NewSet[int](1, 2, 3),
+			s2:   NewSet[int](1, 2, 3),
+			want: NewSet[int](),
+		},
+		{
+			name: "LargeSetTest",
+			s1:   NewSet[int](1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+			s2:   NewSet[int](5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			want: NewSet[int](1, 2, 3, 4),
+		},
+		{
+			name: "EmptySetTest",
+			s1:   NewSet[int](),
+			s2:   NewSet[int](1, 2, 3),
+			want: NewSet[int](),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.s1.Difference(tt.s2); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Set[int].Difference() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestValues(t *testing.T) {
 	type test struct {
 		name     string

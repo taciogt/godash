@@ -32,3 +32,14 @@ func ExampleSet_Delete() {
 	// set{1, 2, 3, 4}
 	// set{1, 3, 4}
 }
+
+func ExampleSet_Has() {
+	s := godash.NewSet(1, 2, 3, 4)
+
+	fmt.Println("Has(1) =", s.Has(1))
+	fmt.Println("Has(5) =", s.Has(5))
+
+	// Output:
+	// Has(1) = true
+	// Has(5) = false
+}

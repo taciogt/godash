@@ -54,10 +54,14 @@ func (s *Set[T]) Values() []T {
 	return result
 }
 
+// Size returns the number of elements in the set.
+// It does not count duplicate elements multiple times.
 func (s Set[T]) Size() int {
 	return len(s)
 }
 
+// Intersection returns a new set that contains the common elements between the set and the other set.
+// The resulting set will only contain elements that are present in both sets.
 func (s Set[T]) Intersection(s2 Set[T]) Set[T] {
 	result := make(Set[T])
 
@@ -82,6 +86,21 @@ func (s Set[T]) Union(s2 Set[T]) Set[T] {
 	}
 	for _, v := range s2.Values() {
 		result.Add(v)
+	}
+
+	return result
+}
+
+// Difference returns a new set that contains the elements of the receiver set (s) but not in the other set (s2).
+// The resulting set does not contain any duplicate elements and is returned as the result.
+// The receiver set (s) is not modified.
+func (s Set[T]) Difference(s2 Set[T]) Set[T] {
+	result := NewSet[T]()
+
+	for key := range s {
+		if !s2.Has(key) {
+			result.Add(key)
+		}
 	}
 
 	return result
