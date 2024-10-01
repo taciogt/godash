@@ -17,6 +17,7 @@ type setElement interface {
 // The zero value of Set is an empty set.
 type Set[T setElement] map[T]struct{}
 
+// NewSet creates a new Set with the specified elements.
 func NewSet[T setElement](elements ...T) Set[T] {
 	m := make(map[T]struct{})
 	for _, element := range elements {

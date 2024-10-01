@@ -5,6 +5,15 @@ import (
 	"github.com/taciogt/godash"
 )
 
+func ExampleNewSet() {
+	s := godash.NewSet(1, 2, 3)
+
+	fmt.Println(s)
+
+	// Output:
+	// set{1, 2, 3}
+}
+
 func ExampleSet_Add() {
 	s := godash.NewSet(1, 2, 3, 4)
 
