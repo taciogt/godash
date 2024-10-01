@@ -54,6 +54,26 @@ func (s *Set[T]) Values() []T {
 	return result
 }
 
+func (s Set[T]) Size() int {
+	return len(s)
+}
+
+func (s Set[T]) Intersection(s2 Set[T]) Set[T] {
+	result := make(Set[T])
+
+	pivot, other := s, s2
+	if s.Size() > s2.Size() {
+		pivot, other = other, pivot
+	}
+
+	for key := range s {
+		if s2.Has(key) {
+			result.Add(key)
+		}
+	}
+	return result
+}
+
 // String returns a string representation of the set.
 // The elements in the set are joined by commas and surrounded by curly braces.
 // The elements are sorted in ascending order before joining.
