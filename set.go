@@ -74,6 +74,19 @@ func (s Set[T]) Intersection(s2 Set[T]) Set[T] {
 	return result
 }
 
+func (s Set[T]) Union(s2 Set[T]) Set[T] {
+	result := NewSet[T]()
+
+	for _, v := range s.Values() {
+		result.Add(v)
+	}
+	for _, v := range s2.Values() {
+		result.Add(v)
+	}
+
+	return result
+}
+
 // String returns a string representation of the set.
 // The elements in the set are joined by commas and surrounded by curly braces.
 // The elements are sorted in ascending order before joining.

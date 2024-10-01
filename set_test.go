@@ -164,6 +164,44 @@ func TestSet_Intersection(t *testing.T) {
 	}
 }
 
+func TestUnion(t *testing.T) {
+	tests := []struct {
+		name string
+		set1 Set[int]
+		set2 Set[int]
+		want Set[int]
+	}{
+		{
+			name: "union two normal sets",
+			set1: NewSet(1, 2, 3),
+			set2: NewSet(3, 4, 5),
+			want: NewSet(1, 2, 3, 4, 5),
+		}, {
+			name: "union with empty set",
+			set1: NewSet(1, 2, 3),
+			set2: NewSet[int](),
+			want: NewSet(1, 2, 3),
+		}, {
+			name: "union two empty sets",
+			set1: NewSet[int](),
+			set2: NewSet[int](),
+			want: NewSet[int](),
+		}, {
+			name: "union with set with some duplicates",
+			set1: NewSet(1, 2, 3),
+			set2: NewSet(2, 2, 2),
+			want: NewSet(1, 2, 3),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.set1.Union(tt.set2); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Set[%T].Union() = %v, want %v", tt.set1, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestValues(t *testing.T) {
 	type test struct {
 		name     string
