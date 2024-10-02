@@ -1,6 +1,6 @@
 module github.com/taciogt/godash
 
-go 1.21.13
+go 1.21
 
 require (
 	github.com/fatih/color v1.17.0 // indirect
