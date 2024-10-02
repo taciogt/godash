@@ -5,6 +5,15 @@ import (
 	"github.com/taciogt/godash"
 )
 
+func ExampleNewSet() {
+	s := godash.NewSet(1, 2, 3)
+
+	fmt.Println(s)
+
+	// Output:
+	// set{1, 2, 3}
+}
+
 func ExampleSet_Add() {
 	s := godash.NewSet(1, 2, 3, 4)
 
@@ -31,4 +40,15 @@ func ExampleSet_Delete() {
 	// Output:
 	// set{1, 2, 3, 4}
 	// set{1, 3, 4}
+}
+
+func ExampleSet_Has() {
+	s := godash.NewSet(1, 2, 3, 4)
+
+	fmt.Println("Has(1) =", s.Has(1))
+	fmt.Println("Has(5) =", s.Has(5))
+
+	// Output:
+	// Has(1) = true
+	// Has(5) = false
 }

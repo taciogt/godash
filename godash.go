@@ -3,6 +3,8 @@ Package godash provides a set of modular and generic functions to manipulate com
 */
 package godash
 
+// Slice is a generic type representing a slice of elements of any type.
+// The elements of the slice are of type T, where T can be any type.
 type Slice[T any] []T
 
 func NewSlice[T any](elems ...T) Slice[T] {

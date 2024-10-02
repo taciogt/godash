@@ -110,6 +110,145 @@ func TestSet_Has(t *testing.T) {
 	}
 }
 
+func TestSet_Size(t *testing.T) {
+	tests := []struct {
+		name string
+		s    Set[int]
+		want int
+	}{{
+		name: "Empty set",
+		s:    NewSet[int](),
+		want: 0,
+	}, {
+		name: "Single element",
+		s:    NewSet[int](1),
+		want: 1,
+	}, {
+		name: "Multiple elements",
+		s:    NewSet[int](1, 2, 3),
+		want: 3,
+	}, {
+		name: "Duplicate elements",
+		s:    NewSet[int](1, 1, 2, 2, 3, 3),
+		want: 3,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.s.Size(); got != tt.want {
+				t.Errorf("Set.Size() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSet_Intersection(t *testing.T) {
+	tests := []struct {
+		name string
+		s1   Set[int]
+		s2   Set[int]
+		want Set[int]
+	}{
+		{name: "EmptySets", s1: NewSet[int](), s2: NewSet[int](), want: NewSet[int]()},
+		{name: "OneEmptySet", s1: NewSet(1, 2, 3), s2: NewSet[int](), want: NewSet[int]()},
+		{name: "NoMatch", s1: NewSet(1, 2, 3), s2: NewSet(4, 5, 6), want: NewSet[int]()},
+		{name: "PartialMatch", s1: NewSet(1, 2, 3), s2: NewSet(2, 3, 4), want: NewSet(2, 3)},
+		{name: "FullMatch", s1: NewSet(1, 2, 3), s2: NewSet(1, 2, 3), want: NewSet(1, 2, 3)},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.s1.Intersection(tt.s2); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Set.Intersection() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestUnion(t *testing.T) {
+	tests := []struct {
+		name string
+		set1 Set[int]
+		set2 Set[int]
+		want Set[int]
+	}{
+		{
+			name: "union two normal sets",
+			set1: NewSet(1, 2, 3),
+			set2: NewSet(3, 4, 5),
+			want: NewSet(1, 2, 3, 4, 5),
+		}, {
+			name: "union with empty set",
+			set1: NewSet(1, 2, 3),
+			set2: NewSet[int](),
+			want: NewSet(1, 2, 3),
+		}, {
+			name: "union two empty sets",
+			set1: NewSet[int](),
+			set2: NewSet[int](),
+			want: NewSet[int](),
+		}, {
+			name: "union with set with some duplicates",
+			set1: NewSet(1, 2, 3),
+			set2: NewSet(2, 2, 2),
+			want: NewSet(1, 2, 3),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.set1.Union(tt.set2); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Set[%T].Union() = %v, want %v", tt.set1, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSet_Difference(t *testing.T) {
+	tests := []struct {
+		name string
+		s1   Set[int]
+		s2   Set[int]
+		want Set[int]
+	}{
+		{
+			name: "SimpleDifferenceTest1",
+			s1:   NewSet[int](1, 2, 3, 4),
+			s2:   NewSet[int](3, 4, 5, 6),
+			want: NewSet[int](1, 2),
+		},
+		{
+			name: "SimpleDifferenceTest2",
+			s1:   NewSet[int](3, 4, 5, 6),
+			s2:   NewSet[int](1, 2, 3, 4),
+			want: NewSet[int](5, 6),
+		},
+		{
+			name: "NoDifferenceTest",
+			s1:   NewSet[int](1, 2, 3),
+			s2:   NewSet[int](1, 2, 3),
+			want: NewSet[int](),
+		},
+		{
+			name: "LargeSetTest",
+			s1:   NewSet[int](1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+			s2:   NewSet[int](5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			want: NewSet[int](1, 2, 3, 4),
+		},
+		{
+			name: "EmptySetTest",
+			s1:   NewSet[int](),
+			s2:   NewSet[int](1, 2, 3),
+			want: NewSet[int](),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.s1.Difference(tt.s2); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Set[int].Difference() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestValues(t *testing.T) {
 	type test struct {
 		name     string
