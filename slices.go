@@ -8,6 +8,22 @@ func NewSlice[T any](elems ...T) Slice[T] {
 	return elems
 }
 
+// At retrieves the element at the specified index of the Slice.
+// Negative indexes count backward from the end of the Slice.
+func At[T any](s Slice[T], index int) T {
+	if index > 0 {
+		return s[index]
+	} else {
+		return s[len(s)+index]
+	}
+}
+
+// At returns the element at the specified index within the slice.
+// Negative indexes are supported to retrieve elements from the end of the slice.
+func (s Slice[T]) At(index int) T {
+	return At(s, index)
+}
+
 // Every returns true if every element in the given slice satisfies the provided predicate function.
 // Otherwise, it returns false.
 func Every[T any](s Slice[T], p Predicate[T]) bool {
