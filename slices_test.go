@@ -13,20 +13,22 @@ type customStruct struct {
 	string string
 }
 
+type typeAlias int
+
 func TestAt(t *testing.T) {
-	t.Run("tests for At() function", func(t *testing.T) {
+	t.Run("tests for At() method", func(t *testing.T) {
 		tcs := []struct {
 			name        string
-			input       Slice[int]
+			input       []int
 			index       int
 			expected    int
 			shouldPanic bool
 		}{
-			{name: "Positive index", input: Slice[int]{1, 2, 3, 4, 5}, index: 2, expected: 3, shouldPanic: false},
-			{name: "Negative index", input: Slice[int]{1, 2, 3, 4, 5}, index: -1, expected: 5, shouldPanic: false},
-			{name: "Zero-length slice", input: Slice[int]{}, index: 0, shouldPanic: true},
-			{name: "Index out of bounds", input: Slice[int]{1, 2, 3}, index: 5, shouldPanic: true},
-			{name: "Negative index out of bounds", input: Slice[int]{1, 2, 3}, index: -4, shouldPanic: true},
+			{name: "Positive index", input: []int{1, 2, 3, 4, 5}, index: 2, expected: 3, shouldPanic: false},
+			{name: "Negative index", input: []int{1, 2, 3, 4, 5}, index: -1, expected: 5, shouldPanic: false},
+			{name: "Zero-length slice", input: []int{}, index: 0, shouldPanic: true},
+			{name: "Index out of bounds", input: []int{1, 2, 3}, index: 5, shouldPanic: true},
+			{name: "Negative index out of bounds", input: []int{1, 2, 3}, index: -4, shouldPanic: true},
 		}
 
 		for _, tc := range tcs {
@@ -40,12 +42,16 @@ func TestAt(t *testing.T) {
 				if got != tc.expected {
 					t.Errorf("expected %v, got %v", tc.expected, got)
 				}
+
+				s := NewSlice(tc.input...)
+				got = s.At(tc.index)
+				if got != tc.expected {
+					t.Errorf("expected %v, got %v", tc.expected, got)
+				}
 			})
 		}
 	})
 }
-
-type typeAlias int
 
 func TestEvery(t *testing.T) {
 	t.Run("integer slices", func(t *testing.T) {
