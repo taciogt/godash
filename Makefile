@@ -8,7 +8,7 @@ help:  ## Show this help
 	./help.sh "$(MAKEFILE_LIST)"
 
 .PHONY: setup
-setup:
+setup:  ## Install dependencies for local development
 	go get -u github.com/rakyll/gotest
 	go install github.com/rakyll/gotest
 	go get golang.org/x/tools/cmd/godoc
