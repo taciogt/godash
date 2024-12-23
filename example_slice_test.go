@@ -28,6 +28,17 @@ func ExampleSlice_Every() {
 	// false
 }
 
+func ExampleSlice_Fill() {
+	s := godash.NewSlice(1, 2, 3, 4, 5)
+	fmt.Println(s.Fill(9))
+	fmt.Println(s.Fill(9, 2))
+	fmt.Println(s.Fill(9, 1, 3))
+	// Output:
+	// [9 9 9 9 9]
+	// [1 2 9 9 9]
+	// [1 9 9 9 5]
+}
+
 func ExampleFilter() {
 	s := []int{-3, -2, -1, 0, 1, 2, 3}
 	isGreaterThanZero := func(n int) bool {

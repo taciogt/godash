@@ -15,6 +15,44 @@ type customStruct struct {
 
 type typeAlias int
 
+func TestAt(t *testing.T) {
+	t.Run("tests for At() method", func(t *testing.T) {
+		tcs := []struct {
+			name        string
+			input       []int
+			index       int
+			expected    int
+			shouldPanic bool
+		}{
+			{name: "Positive index", input: []int{1, 2, 3, 4, 5}, index: 2, expected: 3, shouldPanic: false},
+			{name: "Negative index", input: []int{1, 2, 3, 4, 5}, index: -1, expected: 5, shouldPanic: false},
+			{name: "Zero-length slice", input: []int{}, index: 0, shouldPanic: true},
+			{name: "Index out of bounds", input: []int{1, 2, 3}, index: 5, shouldPanic: true},
+			{name: "Negative index out of bounds", input: []int{1, 2, 3}, index: -4, shouldPanic: true},
+		}
+
+		for _, tc := range tcs {
+			t.Run(tc.name, func(t *testing.T) {
+				defer func() {
+					if r := recover(); tc.shouldPanic == (r == nil) {
+						t.Errorf("expected panic=%t but got: %v", tc.shouldPanic, r)
+					}
+				}()
+				got := At(tc.input, tc.index)
+				if got != tc.expected {
+					t.Errorf("expected %v, got %v", tc.expected, got)
+				}
+
+				s := NewSlice(tc.input...)
+				got = s.At(tc.index)
+				if got != tc.expected {
+					t.Errorf("expected %v, got %v", tc.expected, got)
+				}
+			})
+		}
+	})
+}
+
 func TestEvery(t *testing.T) {
 	t.Run("integer slices", func(t *testing.T) {
 		even := func(n int) bool { return n%2 == 0 }
@@ -189,6 +227,68 @@ func TestEvery(t *testing.T) {
 			})
 		}
 	})
+}
+
+func TestFill(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     []int
+		value     int
+		positions []int
+		expected  []int
+	}{{
+		name:      "fill entire slice",
+		input:     []int{1, 2, 3, 4},
+		value:     0,
+		positions: nil,
+		expected:  []int{0, 0, 0, 0},
+	}, {
+		name:      "fill with lower boundary",
+		input:     []int{1, 2, 3, 4},
+		value:     99,
+		positions: []int{1},
+		expected:  []int{1, 99, 99, 99},
+	}, {
+		name:      "fill with lower and upper boundary",
+		input:     []int{1, 2, 3, 4},
+		value:     99,
+		positions: []int{1, 2},
+		expected:  []int{1, 99, 99, 4},
+	}, {
+		name:      "fill no effect with empty positions",
+		input:     []int{1, 2, 3, 4},
+		value:     5,
+		positions: []int{},
+		expected:  []int{5, 5, 5, 5},
+	}, {
+		name:      "fill empty slice",
+		input:     []int{},
+		value:     10,
+		positions: nil,
+		expected:  []int{},
+	}, {
+		name:      "fill out-of-bounds indices",
+		input:     []int{1, 2, 3, 4},
+		value:     5,
+		positions: []int{-1, 5},
+		expected:  []int{5, 5, 5, 5},
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Fill(tt.input, tt.value, tt.positions...)
+			if !reflect.DeepEqual(got, tt.expected) {
+				t.Errorf("Fill() = %v, want %v", got, tt.expected)
+			}
+
+			slice := NewSlice(tt.input...)
+			gotSlice := slice.Fill(tt.value, tt.positions...)
+			expectedSlice := NewSlice(tt.expected...)
+			if !reflect.DeepEqual(gotSlice, expectedSlice) {
+				t.Errorf("slice.Fill() = %v, want %v", gotSlice, expectedSlice)
+			}
+		})
+	}
 }
 
 func TestFilter(t *testing.T) {
@@ -493,6 +593,78 @@ func TestForEach(t *testing.T) {
 	}
 }
 
+func TestIncludes(t *testing.T) {
+	tests := []struct {
+		name     string
+		slice    ComparableSlice[int]
+		search   int
+		expected bool
+	}{{
+		name:     "element exists in slice",
+		slice:    ComparableSlice[int]{1, 2, 3, 4, 5},
+		search:   3,
+		expected: true,
+	}, {
+		name:     "element does not exist in slice",
+		slice:    ComparableSlice[int]{1, 2, 3, 4, 5},
+		search:   6,
+		expected: false,
+	}, {
+		name:     "empty slice",
+		slice:    ComparableSlice[int]{},
+		search:   1,
+		expected: false,
+	}, {
+		name:     "slice with duplicates contains the element",
+		slice:    ComparableSlice[int]{1, 2, 2, 3, 3},
+		search:   2,
+		expected: true,
+	}, {
+		name:     "slice with negative numbers contains the element",
+		slice:    ComparableSlice[int]{-1, -2, -3, -4},
+		search:   -3,
+		expected: true,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.slice.Includes(tt.search)
+			if got != tt.expected {
+				t.Errorf("Includes() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+
+	t.Run("string slices", func(t *testing.T) {
+		slice := ComparableSlice[string]{"apple", "banana", "cherry"}
+		if !slice.Includes("banana") {
+			t.Errorf("Includes() = false, want true for 'banana'")
+		}
+		if slice.Includes("grape") {
+			t.Errorf("Includes() = true, want false for 'grape'")
+		}
+	})
+
+	t.Run("slices of custom structs", func(t *testing.T) {
+		type customStruct struct {
+			id   int
+			name string
+		}
+		slice := ComparableSlice[customStruct]{
+			{id: 1, name: "Alice"},
+			{id: 2, name: "Bob"},
+		}
+		search := customStruct{id: 1, name: "Alice"}
+		if !slice.Includes(search) {
+			t.Errorf("Includes() = false, want true for %v", search)
+		}
+		searchNotExist := customStruct{id: 3, name: "Charlie"}
+		if slice.Includes(searchNotExist) {
+			t.Errorf("Includes() = true, want false for %v", searchNotExist)
+		}
+	})
+}
+
 func TestMap(t *testing.T) {
 	tt := []struct {
 		name     string
@@ -537,6 +709,125 @@ func TestMap(t *testing.T) {
 			}
 		})
 	}
+}
+func TestFindLast(t *testing.T) {
+	t.Run("integer slices", func(t *testing.T) {
+		tests := []struct {
+			name     string
+			s        Slice[int]
+			p        Predicate[int]
+			expected int
+			found    bool
+		}{{
+			name:     "find last even number",
+			s:        Slice[int]{1, 2, 3, 4, 5},
+			p:        func(x int) bool { return x%2 == 0 },
+			expected: 4,
+			found:    true,
+		}, {
+			name:     "empty slice",
+			s:        Slice[int]{},
+			p:        func(x int) bool { return x > 0 },
+			expected: 0, // default value for int
+			found:    false,
+		}, {
+			name:     "no match found",
+			s:        Slice[int]{1, 3, 5},
+			p:        func(x int) bool { return x%2 == 0 },
+			expected: 0,
+			found:    false,
+		}, {
+			name:     "only one element matches",
+			s:        Slice[int]{1, 2, 3},
+			p:        func(x int) bool { return x == 2 },
+			expected: 2,
+			found:    true,
+		}, {
+			name:     "last element matches",
+			s:        Slice[int]{1, 2, 3, 4},
+			p:        func(x int) bool { return x == 4 },
+			expected: 4,
+			found:    true,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got, found := tt.s.FindLast(tt.p)
+				if got != tt.expected || found != tt.found {
+					t.Errorf("FindLast() = (%v, %v); want (%v, %v)", got, found, tt.expected, tt.found)
+				}
+			})
+		}
+	})
+
+	t.Run("string slices", func(t *testing.T) {
+		tests := []struct {
+			name     string
+			s        Slice[string]
+			p        Predicate[string]
+			expected string
+			found    bool
+		}{{
+			name:     "find last string containing 'a'",
+			s:        Slice[string]{"apple", "banana", "cherry"},
+			p:        func(x string) bool { return strings.Contains(x, "a") },
+			expected: "banana",
+			found:    true,
+		}, {
+			name:     "no string matches predicate",
+			s:        Slice[string]{"dog", "cat", "mouse"},
+			p:        func(x string) bool { return strings.Contains(x, "z") },
+			expected: "",
+			found:    false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got, found := tt.s.FindLast(tt.p)
+				if got != tt.expected || found != tt.found {
+					t.Errorf("FindLast() = (%v, %v); want (%v, %v)", got, found, tt.expected, tt.found)
+				}
+			})
+		}
+	})
+
+	t.Run("custom struct slices", func(t *testing.T) {
+		tests := []struct {
+			name     string
+			s        Slice[customStruct]
+			p        Predicate[customStruct]
+			expected customStruct
+			found    bool
+		}{{
+			name: "find last struct with int field > 0",
+			s: Slice[customStruct]{
+				{int: 1, string: "a"},
+				{int: 0, string: "b"},
+				{int: 2, string: "c"},
+			},
+			p:        func(cs customStruct) bool { return cs.int > 0 },
+			expected: customStruct{int: 2, string: "c"},
+			found:    true,
+		}, {
+			name: "no match found",
+			s: Slice[customStruct]{
+				{int: -1, string: "x"},
+				{int: -2, string: "y"},
+			},
+			p:        func(cs customStruct) bool { return cs.int > 0 },
+			expected: customStruct{},
+			found:    false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got, found := tt.s.FindLast(tt.p)
+				if got != tt.expected || found != tt.found {
+					t.Errorf("FindLast() = (%v, %v); want (%v, %v)", got, found, tt.expected, tt.found)
+				}
+			})
+		}
+	})
 }
 
 func TestReduce(t *testing.T) {
