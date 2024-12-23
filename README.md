@@ -40,6 +40,8 @@ The [Slices](https://pkg.go.dev/github.com/taciogt/godash#Slice) type are a cust
 * [FindLast()](https://pkg.go.dev/github.com/taciogt/godash#Slice.FindLast)
 * [FindLastIndex()](https://pkg.go.dev/github.com/taciogt/godash#Slice.FindLastIndex)
 * [ForEach()](https://pkg.go.dev/github.com/taciogt/godash#Slice.ForEach)
+* [Map()](https://pkg.go.dev/github.com/taciogt/godash#Map)
+* [Reduce()](https://pkg.go.dev/github.com/taciogt/godash#Reduce)
 
 
 ## References
