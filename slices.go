@@ -103,6 +103,24 @@ func (s Slice[T]) FindIndex(p Predicate[T]) (int, bool) {
 	return FindIndex(s, p)
 }
 
+// FindLastIndex returns the index of the last element in the given slice that satisfies
+// the provided predicate function. If no element satisfies the predicate,
+// -1 is returned along with false.
+func FindLastIndex[T any, S ~[]T](s S, p Predicate[T]) (int, bool) {
+	for i := len(s) - 1; i >= 0; i-- {
+		if p(s[i]) {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
+// FindLastIndex behaves exactly as the [FindLastIndex] function,
+// except it is called directly on the slice to be searched.
+func (s Slice[T]) FindLastIndex(p Predicate[T]) (int, bool) {
+	return FindLastIndex(s, p)
+}
+
 // Find returns the first element in the given slice that satisfies the provided predicate function.
 // If no element satisfies the predicate, the zero value of the element type is returned along with false.
 func Find[T any, S ~[]T](s S, p Predicate[T]) (T, bool) {
