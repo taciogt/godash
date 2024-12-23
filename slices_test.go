@@ -229,6 +229,68 @@ func TestEvery(t *testing.T) {
 	})
 }
 
+func TestFill(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     []int
+		value     int
+		positions []int
+		expected  []int
+	}{{
+		name:      "fill entire slice",
+		input:     []int{1, 2, 3, 4},
+		value:     0,
+		positions: nil,
+		expected:  []int{0, 0, 0, 0},
+	}, {
+		name:      "fill with lower boundary",
+		input:     []int{1, 2, 3, 4},
+		value:     99,
+		positions: []int{1},
+		expected:  []int{1, 99, 99, 99},
+	}, {
+		name:      "fill with lower and upper boundary",
+		input:     []int{1, 2, 3, 4},
+		value:     99,
+		positions: []int{1, 2},
+		expected:  []int{1, 99, 99, 4},
+	}, {
+		name:      "fill no effect with empty positions",
+		input:     []int{1, 2, 3, 4},
+		value:     5,
+		positions: []int{},
+		expected:  []int{5, 5, 5, 5},
+	}, {
+		name:      "fill empty slice",
+		input:     []int{},
+		value:     10,
+		positions: nil,
+		expected:  []int{},
+	}, {
+		name:      "fill out-of-bounds indices",
+		input:     []int{1, 2, 3, 4},
+		value:     5,
+		positions: []int{-1, 5},
+		expected:  []int{5, 5, 5, 5},
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Fill(tt.input, tt.value, tt.positions...)
+			if !reflect.DeepEqual(got, tt.expected) {
+				t.Errorf("Fill() = %v, want %v", got, tt.expected)
+			}
+
+			slice := NewSlice(tt.input...)
+			gotSlice := slice.Fill(tt.value, tt.positions...)
+			expectedSlice := NewSlice(tt.expected...)
+			if !reflect.DeepEqual(gotSlice, expectedSlice) {
+				t.Errorf("slice.Fill() = %v, want %v", gotSlice, expectedSlice)
+			}
+		})
+	}
+}
+
 func TestFilter(t *testing.T) {
 	t.Run("tests for slices of integers", func(t *testing.T) {
 		greaterThanFive := func(value int) bool {

@@ -40,6 +40,35 @@ func (s Slice[T]) Every(p Predicate[T]) bool {
 	return Every(s, p)
 }
 
+// Fill replaces elements of a slice with the specified value within the given range or entire slice
+// if no range is provided.
+func Fill[T any, S ~[]T](s S, value T, positions ...int) []T {
+	newSlice := make([]T, len(s))
+	copy(newSlice, s)
+
+	lowerBound := 0
+	if len(positions) > 0 {
+		lowerBound = positions[0]
+	}
+	upperBound := len(s)
+	if len(positions) > 1 {
+		upperBound = positions[1]
+	}
+
+	for i := range newSlice {
+		if (i >= lowerBound) && (i <= upperBound) {
+			newSlice[i] = value
+		}
+	}
+	return newSlice
+}
+
+// Fill replaces elements of the slice with the specified value within the given range or entire slice
+// if no range is provided.
+func (s Slice[T]) Fill(value T, positions ...int) Slice[T] {
+	return Fill(s, value, positions...)
+}
+
 // Filter applies a predicate function to each element in the given slice and returns a new slice
 // containing only the elements for which the predicate function returns true.
 func Filter[T any, S ~[]T](s S, p Predicate[T]) []T {
