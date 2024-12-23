@@ -86,6 +86,22 @@ func (s Slice[T]) Filter(p Predicate[T]) Slice[T] {
 	return Filter(s, p)
 }
 
+// Find returns the first element in the given slice that satisfies the provided predicate function.
+// If no element satisfies the predicate, the zero value of the element type is returned along with false.
+func Find[T any, S ~[]T](s S, p Predicate[T]) (T, bool) {
+	if i, ok := FindIndex(s, p); ok {
+		return s[i], true
+	}
+
+	var zero T
+	return zero, false
+}
+
+// Find behaves exactly as the [Find] function, except it is called directly on the slice to be searched.
+func (s Slice[T]) Find(p Predicate[T]) (T, bool) {
+	return Find(s, p)
+}
+
 // FindIndex returns the index of the first element in the given slice that satisfies
 // the provided predicate function. If no element satisfies the predicate,
 // -1 is returned along with false.
@@ -101,6 +117,22 @@ func FindIndex[T any, S ~[]T](s S, p Predicate[T]) (int, bool) {
 // FindIndex behaves exactly as the [FindIndex] function, except it is called directly on the slice to be searched.
 func (s Slice[T]) FindIndex(p Predicate[T]) (int, bool) {
 	return FindIndex(s, p)
+}
+
+// FindLast returns the last element in the given slice that satisfies the provided predicate function.
+// If no element satisfies the predicate, the zero value of the element type is returned along with false.
+func FindLast[T any, S ~[]T](s S, p Predicate[T]) (T, bool) {
+	if i, ok := FindLastIndex(s, p); ok {
+		return s[i], true
+	}
+
+	var zero T
+	return zero, false
+}
+
+// FindLast behaves exactly as the [FindLast] function, except it is called directly on the slice to be searched.
+func (s Slice[T]) FindLast(p Predicate[T]) (T, bool) {
+	return Find(s, p)
 }
 
 // FindLastIndex returns the index of the last element in the given slice that satisfies
@@ -119,22 +151,6 @@ func FindLastIndex[T any, S ~[]T](s S, p Predicate[T]) (int, bool) {
 // except it is called directly on the slice to be searched.
 func (s Slice[T]) FindLastIndex(p Predicate[T]) (int, bool) {
 	return FindLastIndex(s, p)
-}
-
-// Find returns the first element in the given slice that satisfies the provided predicate function.
-// If no element satisfies the predicate, the zero value of the element type is returned along with false.
-func Find[T any, S ~[]T](s S, p Predicate[T]) (T, bool) {
-	if i, ok := FindIndex(s, p); ok {
-		return s[i], true
-	}
-
-	var zero T
-	return zero, false
-}
-
-// Find behaves exactly as the [Find] function, except it is called directly on the slice to be searched.
-func (s Slice[T]) Find(p Predicate[T]) (T, bool) {
-	return Find(s, p)
 }
 
 // ForEach applies the provided function f to each element in the slice s.
