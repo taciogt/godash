@@ -4,6 +4,11 @@ package godash
 // The elements of the slice are of type T, where T can be any type.
 type Slice[T any] []T
 
+// ComparableSlice is a generic slice type that restricts its elements to types that satisfy the comparable constraint.
+// It extends the behavior of the standard Slice with some extra functionality that don't require predicates,
+// like the Includes method.
+type ComparableSlice[T comparable] Slice[T]
+
 func NewSlice[T any](elems ...T) Slice[T] {
 	return elems
 }
@@ -23,6 +28,19 @@ func At[T any](s Slice[T], index int) T {
 func (s Slice[T]) At(index int) T {
 	return At(s, index)
 }
+
+//func Exists[T any](s Slice[T], p Predicate[T]) bool {
+//	for _, v := range s {
+//		if !p(v) {
+//			return false
+//		}
+//	}
+//	return true
+//}
+//
+//func (s Slice[T]) Exists(p Predicate[T]) bool {
+//	return Every(s, p)
+//}
 
 // Every returns true if every element in the given slice satisfies the provided predicate function.
 // Otherwise, it returns false.
@@ -173,6 +191,22 @@ func ForEach[T any, S ~[]T](s S, f func(i int, v T)) {
 // ForEach behaves exactly like [ForEach] function, except it is called directly on the slice.
 func (s Slice[T]) ForEach(f func(i int, v T)) {
 	ForEach(s, f)
+}
+
+// Includes checks whether the specified value exists within the given ComparableSlice.
+// Returns true if found, false otherwise.
+func Includes[T comparable](s ComparableSlice[T], value T) bool {
+	for _, v := range s {
+		if v == value {
+			return true
+		}
+	}
+	return false
+}
+
+// Includes behaves exactly like [Includes] function, except it is called directly on the slice.
+func (s ComparableSlice[T]) Includes(value T) bool {
+	return Includes(s, value)
 }
 
 // Map takes in a slice of input values and a mapper function, and applies the mapper function to each

@@ -593,6 +593,78 @@ func TestForEach(t *testing.T) {
 	}
 }
 
+func TestIncludes(t *testing.T) {
+	tests := []struct {
+		name     string
+		slice    ComparableSlice[int]
+		search   int
+		expected bool
+	}{{
+		name:     "element exists in slice",
+		slice:    ComparableSlice[int]{1, 2, 3, 4, 5},
+		search:   3,
+		expected: true,
+	}, {
+		name:     "element does not exist in slice",
+		slice:    ComparableSlice[int]{1, 2, 3, 4, 5},
+		search:   6,
+		expected: false,
+	}, {
+		name:     "empty slice",
+		slice:    ComparableSlice[int]{},
+		search:   1,
+		expected: false,
+	}, {
+		name:     "slice with duplicates contains the element",
+		slice:    ComparableSlice[int]{1, 2, 2, 3, 3},
+		search:   2,
+		expected: true,
+	}, {
+		name:     "slice with negative numbers contains the element",
+		slice:    ComparableSlice[int]{-1, -2, -3, -4},
+		search:   -3,
+		expected: true,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.slice.Includes(tt.search)
+			if got != tt.expected {
+				t.Errorf("Includes() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+
+	t.Run("string slices", func(t *testing.T) {
+		slice := ComparableSlice[string]{"apple", "banana", "cherry"}
+		if !slice.Includes("banana") {
+			t.Errorf("Includes() = false, want true for 'banana'")
+		}
+		if slice.Includes("grape") {
+			t.Errorf("Includes() = true, want false for 'grape'")
+		}
+	})
+
+	t.Run("slices of custom structs", func(t *testing.T) {
+		type customStruct struct {
+			id   int
+			name string
+		}
+		slice := ComparableSlice[customStruct]{
+			{id: 1, name: "Alice"},
+			{id: 2, name: "Bob"},
+		}
+		search := customStruct{id: 1, name: "Alice"}
+		if !slice.Includes(search) {
+			t.Errorf("Includes() = false, want true for %v", search)
+		}
+		searchNotExist := customStruct{id: 3, name: "Charlie"}
+		if slice.Includes(searchNotExist) {
+			t.Errorf("Includes() = true, want false for %v", searchNotExist)
+		}
+	})
+}
+
 func TestMap(t *testing.T) {
 	tt := []struct {
 		name     string
