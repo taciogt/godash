@@ -132,7 +132,7 @@ func FindLast[T any, S ~[]T](s S, p Predicate[T]) (T, bool) {
 
 // FindLast behaves exactly as the [FindLast] function, except it is called directly on the slice to be searched.
 func (s Slice[T]) FindLast(p Predicate[T]) (T, bool) {
-	return Find(s, p)
+	return FindLast(s, p)
 }
 
 // FindLastIndex returns the index of the last element in the given slice that satisfies
