@@ -26,7 +26,17 @@ Check the [GoDoc here](https://pkg.go.dev/github.com/taciogt/godash).
 
 ### Sets
 
-TODO
+The [Set](https://pkg.go.dev/github.com/taciogt/godash#Set) type represents a set data structure using native Golang data types. It can store any type that implements the [comparable](https://go.dev/ref/spec#Type_constraints) interface. This custom type provides the following methods:
+* [Add(element T)](https://pkg.go.dev/github.com/taciogt/godash#Set.Add)
+* [Delete(element T)](https://pkg.go.dev/github.com/taciogt/godash#Set.Delete)
+* [Difference(s Set[T])](https://pkg.go.dev/github.com/taciogt/godash#Set.Difference)
+* [Has(element T)](https://pkg.go.dev/github.com/taciogt/godash#Set.Has)
+* [Intersection(s Set[T])](https://pkg.go.dev/github.com/taciogt/godash#Set.Intersection)
+* [Size()](https://pkg.go.dev/github.com/taciogt/godash#Set.Size)
+* [String()](https://pkg.go.dev/github.com/taciogt/godash#Set.String)
+* [Union(s Set[T])](https://pkg.go.dev/github.com/taciogt/godash#Set.Union)
+* [Values()](https://pkg.go.dev/github.com/taciogt/godash#Set.Values)
+
 
 ### Slices
 
