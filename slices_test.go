@@ -593,7 +593,7 @@ func TestForEach(t *testing.T) {
 	}
 }
 
-func TestSome(t *testing.T) {
+func TestIncludes(t *testing.T) {
 	tests := []struct {
 		name     string
 		slice    ComparableSlice[int]
@@ -628,20 +628,20 @@ func TestSome(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.slice.Some(tt.search)
+			got := tt.slice.Includes(tt.search)
 			if got != tt.expected {
-				t.Errorf("Some() = %v, want %v", got, tt.expected)
+				t.Errorf("Includes() = %v, want %v", got, tt.expected)
 			}
 		})
 	}
 
 	t.Run("string slices", func(t *testing.T) {
 		slice := ComparableSlice[string]{"apple", "banana", "cherry"}
-		if !slice.Some("banana") {
-			t.Errorf("Some() = false, want true for 'banana'")
+		if !slice.Includes("banana") {
+			t.Errorf("Includes() = false, want true for 'banana'")
 		}
-		if slice.Some("grape") {
-			t.Errorf("Some() = true, want false for 'grape'")
+		if slice.Includes("grape") {
+			t.Errorf("Includes() = true, want false for 'grape'")
 		}
 	})
 
@@ -655,12 +655,12 @@ func TestSome(t *testing.T) {
 			{id: 2, name: "Bob"},
 		}
 		search := customStruct{id: 1, name: "Alice"}
-		if !slice.Some(search) {
-			t.Errorf("Some() = false, want true for %v", search)
+		if !slice.Includes(search) {
+			t.Errorf("Includes() = false, want true for %v", search)
 		}
 		searchNotExist := customStruct{id: 3, name: "Charlie"}
-		if slice.Some(searchNotExist) {
-			t.Errorf("Some() = true, want false for %v", searchNotExist)
+		if slice.Includes(searchNotExist) {
+			t.Errorf("Includes() = true, want false for %v", searchNotExist)
 		}
 	})
 }
@@ -844,12 +844,12 @@ func TestReduce(t *testing.T) {
 	expectedErr := errors.New("intentional reducer error")
 
 	tests := []struct {
-		name               string
-		inputArray         []int
-		reducerFunc        func(int, int) (int, error)
-		initialValue       int
-		expectedResult     int
-		expectedErrorIsNil bool
+		name                string
+		inputArray          []int
+		reducerFunc         func(int, int) (int, error)
+		initialValue        int
+		expectedResult      int
+		expectedErrorIsNill bool
 
 		inputs   inputs
 		expected expected

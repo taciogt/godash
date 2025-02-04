@@ -6,7 +6,7 @@ type Slice[T any] []T
 
 // ComparableSlice is a generic slice type that restricts its elements to types that satisfy the comparable constraint.
 // It extends the behavior of the standard Slice with some extra functionality that don't require predicates,
-// like the Some method.
+// like the Includes method.
 type ComparableSlice[T comparable] Slice[T]
 
 func NewSlice[T any](elems ...T) Slice[T] {
@@ -193,9 +193,9 @@ func (s Slice[T]) ForEach(f func(i int, v T)) {
 	ForEach(s, f)
 }
 
-// Some checks whether the specified value exists within the given ComparableSlice.
+// Includes checks whether the specified value exists within the given ComparableSlice.
 // Returns true if found, false otherwise.
-func Some[T comparable](s ComparableSlice[T], value T) bool {
+func Includes[T comparable](s ComparableSlice[T], value T) bool {
 	for _, v := range s {
 		if v == value {
 			return true
@@ -204,9 +204,9 @@ func Some[T comparable](s ComparableSlice[T], value T) bool {
 	return false
 }
 
-// Some behaves exactly like [Some] function, except it is called directly on the slice.
-func (s ComparableSlice[T]) Some(value T) bool {
-	return Some(s, value)
+// Includes behaves exactly like [Includes] function, except it is called directly on the slice.
+func (s ComparableSlice[T]) Includes(value T) bool {
+	return Includes(s, value)
 }
 
 // Map takes in a slice of input values and a mapper function, and applies the mapper function to each
