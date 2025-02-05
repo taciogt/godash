@@ -4,6 +4,37 @@ import (
 	"testing"
 )
 
+func TestComparableSlice_At(t *testing.T) {
+	type test struct {
+		name     string
+		slice    ComparableSlice[int]
+		index    int
+		expected int
+	}
+	tests := []test{{
+		name:     "find element at an existing positive index",
+		slice:    NewComparableSlice(1, 2, 3, 4, 5),
+		index:    1,
+		expected: 2,
+	}, {
+		name:     "find element at an existing negative index",
+		slice:    NewComparableSlice(1, 2, 3, 4, 5),
+		index:    -1,
+		expected: 5,
+	}}
+
+	t.Run(t.Name(), func(t *testing.T) {
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got := tt.slice.At(tt.index)
+				if got != tt.expected {
+					t.Errorf("At() = %v, want %v", got, tt.expected)
+				}
+			})
+		}
+	})
+}
+
 func TestIncludes(t *testing.T) {
 	tests := []struct {
 		name     string
