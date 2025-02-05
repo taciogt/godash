@@ -9,6 +9,11 @@ func NewComparableSlice[T comparable](elems ...T) ComparableSlice[T] {
 	return elems
 }
 
+// At behaves as the method Slice.At
+func (s ComparableSlice[T]) At(index int) T {
+	return At[T](Slice[T](s), index)
+}
+
 // Includes checks whether the specified value exists within the given ComparableSlice.
 // Returns true if found, false otherwise.
 func Includes[T comparable](s ComparableSlice[T], value T) bool {
