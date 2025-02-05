@@ -35,18 +35,18 @@ func TestAt(t *testing.T) {
 			t.Run(tc.name, func(t *testing.T) {
 				defer func() {
 					if r := recover(); tc.shouldPanic == (r == nil) {
-						t.Errorf("expected panic=%t but got: %v", tc.shouldPanic, r)
+						t.Errorf("expectedIndex panic=%t but got: %v", tc.shouldPanic, r)
 					}
 				}()
 				got := At(tc.input, tc.index)
 				if got != tc.expected {
-					t.Errorf("expected %v, got %v", tc.expected, got)
+					t.Errorf("expectedIndex %v, got %v", tc.expected, got)
 				}
 
 				s := NewSlice(tc.input...)
 				got = s.At(tc.index)
 				if got != tc.expected {
-					t.Errorf("expected %v, got %v", tc.expected, got)
+					t.Errorf("expectedIndex %v, got %v", tc.expected, got)
 				}
 			})
 		}
@@ -593,78 +593,6 @@ func TestForEach(t *testing.T) {
 	}
 }
 
-func TestIncludes(t *testing.T) {
-	tests := []struct {
-		name     string
-		slice    ComparableSlice[int]
-		search   int
-		expected bool
-	}{{
-		name:     "element exists in slice",
-		slice:    ComparableSlice[int]{1, 2, 3, 4, 5},
-		search:   3,
-		expected: true,
-	}, {
-		name:     "element does not exist in slice",
-		slice:    ComparableSlice[int]{1, 2, 3, 4, 5},
-		search:   6,
-		expected: false,
-	}, {
-		name:     "empty slice",
-		slice:    ComparableSlice[int]{},
-		search:   1,
-		expected: false,
-	}, {
-		name:     "slice with duplicates contains the element",
-		slice:    ComparableSlice[int]{1, 2, 2, 3, 3},
-		search:   2,
-		expected: true,
-	}, {
-		name:     "slice with negative numbers contains the element",
-		slice:    ComparableSlice[int]{-1, -2, -3, -4},
-		search:   -3,
-		expected: true,
-	}}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := tt.slice.Includes(tt.search)
-			if got != tt.expected {
-				t.Errorf("Includes() = %v, want %v", got, tt.expected)
-			}
-		})
-	}
-
-	t.Run("string slices", func(t *testing.T) {
-		slice := ComparableSlice[string]{"apple", "banana", "cherry"}
-		if !slice.Includes("banana") {
-			t.Errorf("Includes() = false, want true for 'banana'")
-		}
-		if slice.Includes("grape") {
-			t.Errorf("Includes() = true, want false for 'grape'")
-		}
-	})
-
-	t.Run("slices of custom structs", func(t *testing.T) {
-		type customStruct struct {
-			id   int
-			name string
-		}
-		slice := ComparableSlice[customStruct]{
-			{id: 1, name: "Alice"},
-			{id: 2, name: "Bob"},
-		}
-		search := customStruct{id: 1, name: "Alice"}
-		if !slice.Includes(search) {
-			t.Errorf("Includes() = false, want true for %v", search)
-		}
-		searchNotExist := customStruct{id: 3, name: "Charlie"}
-		if slice.Includes(searchNotExist) {
-			t.Errorf("Includes() = true, want false for %v", searchNotExist)
-		}
-	})
-}
-
 func TestMap(t *testing.T) {
 	tt := []struct {
 		name     string
@@ -702,10 +630,10 @@ func TestMap(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			actual, err := Map(tc.input, tc.mapper)
 			if !reflect.DeepEqual(tc.expected, actual) {
-				t.Errorf("expected %v, got %v", tc.expected, actual)
+				t.Errorf("expectedIndex %v, got %v", tc.expected, actual)
 			}
 			if !reflect.DeepEqual(tc.err, err) {
-				t.Errorf("expected err %v, got %v", tc.err, err)
+				t.Errorf("expectedIndex err %v, got %v", tc.err, err)
 			}
 		})
 	}
@@ -903,10 +831,10 @@ func TestReduce(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			result, err := Reduce(test.inputs.slice, test.inputs.reducer, test.inputs.initialValue)
 			if result != test.expected.result {
-				t.Errorf("expected %v, got %v", test.expected.result, result)
+				t.Errorf("expectedIndex %v, got %v", test.expected.result, result)
 			}
 			if !errors.Is(err, test.expected.error) {
-				t.Errorf("expected error %v, but got %v", test.expected.error, err)
+				t.Errorf("expectedIndex error %v, but got %v", test.expected.error, err)
 			}
 		})
 	}

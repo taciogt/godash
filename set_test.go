@@ -104,7 +104,7 @@ func TestSet_Has(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.set.Has(tt.element); got != tt.expected {
-				t.Errorf("Set.Has() = %v, expected %v", got, tt.expected)
+				t.Errorf("Set.Has() = %v, expectedIndex %v", got, tt.expected)
 			}
 		})
 	}
