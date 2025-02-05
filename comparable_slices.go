@@ -9,27 +9,27 @@ func NewComparableSlice[T comparable](elems ...T) ComparableSlice[T] {
 	return elems
 }
 
-// At behaves as the method Slice.At
+// At behaves as the method [Slice.At]
 func (s ComparableSlice[T]) At(index int) T {
 	return At[T](Slice[T](s), index)
 }
 
-// Every behaves as the method Slice.Every
+// Every behaves as the method [Slice.Every]
 func (s ComparableSlice[T]) Every(p Predicate[T]) bool {
 	return Every(Slice[T](s), p)
 }
 
-// Fill behaves as the method Slice.Fill
+// Fill behaves as the method [Slice.Fill]
 func (s ComparableSlice[T]) Fill(value T, positions ...int) ComparableSlice[T] {
 	return Fill(Slice[T](s), value, positions...)
 }
 
-// Filter behaves as the method Slice.Filter
+// Filter behaves as the method [Slice.Filter]
 func (s ComparableSlice[T]) Filter(p Predicate[T]) ComparableSlice[T] {
 	return Filter(Slice[T](s), p)
 }
 
-// Find behaves as the method Slice.Find
+// Find behaves as the method [Slice.Find]
 func (s ComparableSlice[T]) Find(p Predicate[T]) (T, bool) {
 	return Find(Slice[T](s), p)
 }
