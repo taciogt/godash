@@ -254,6 +254,41 @@ func TestComparableSlice_FindIndex(t *testing.T) {
 	}
 }
 
+func TestComparableSlice_FindLast(t *testing.T) {
+	type test struct {
+		name          string
+		slice         ComparableSlice[int]
+		predicate     func(int) bool
+		expectedValue int
+		expectedOk    bool
+	}
+	isEven := func(n int) bool {
+		return n%2 == 0
+	}
+	tests := []test{{
+		name:          "find even number",
+		slice:         NewComparableSlice(1, 3, 5, 4, 6, 8),
+		predicate:     isEven,
+		expectedValue: 8,
+		expectedOk:    true,
+	}, {
+		name:          "do not find even number",
+		slice:         NewComparableSlice(1, 3, 5),
+		predicate:     isEven,
+		expectedValue: 0,
+		expectedOk:    false,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotValue, gotOk := tt.slice.FindLast(tt.predicate)
+			if gotValue != tt.expectedValue || gotOk != tt.expectedOk {
+				t.Errorf("FindLast() = %v, %v, want %v, %v", gotValue, gotOk, tt.expectedValue, tt.expectedOk)
+			}
+		})
+	}
+}
+
 func TestIncludes(t *testing.T) {
 	tests := []struct {
 		name     string
