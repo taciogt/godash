@@ -128,6 +128,42 @@ func TestComparableSlice_Fill(t *testing.T) {
 	}
 }
 
+func TestComparableSlice_Filter(t *testing.T) {
+	type test struct {
+		name      string
+		slice     ComparableSlice[int]
+		predicate func(int) bool
+		expected  ComparableSlice[int]
+	}
+	isEven := func(n int) bool {
+		return n%2 == 0
+	}
+	tests := []test{{
+		name:      "filter positive numbers",
+		slice:     NewComparableSlice(1, 2, 3, 4, 5),
+		predicate: isEven,
+		expected:  NewComparableSlice(2, 4),
+	}, {
+		name:      "filter returns empty slice",
+		slice:     NewComparableSlice(1, 3, 5),
+		predicate: isEven,
+		expected:  NewComparableSlice[int](),
+	}, {
+		name:      "filter on empty slice",
+		slice:     NewComparableSlice[int](),
+		predicate: isEven,
+		expected:  NewComparableSlice[int](),
+	}}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.slice.Filter(tt.predicate)
+			if !slices.Equal(got, tt.expected) {
+				t.Errorf("Filter() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+}
+
 func TestIncludes(t *testing.T) {
 	tests := []struct {
 		name     string
