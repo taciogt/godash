@@ -34,6 +34,11 @@ func (s ComparableSlice[T]) Find(p Predicate[T]) (T, bool) {
 	return Find(Slice[T](s), p)
 }
 
+// FindIndex behaves as the method [Slice.FindIndex]
+func (s ComparableSlice[T]) FindIndex(p Predicate[T]) (int, bool) {
+	return FindIndex(Slice[T](s), p)
+}
+
 // Includes checks whether the specified value exists within the given ComparableSlice.
 // Returns true if found, false otherwise.
 func Includes[T comparable](s ComparableSlice[T], value T) bool {
