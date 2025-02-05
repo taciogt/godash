@@ -39,7 +39,6 @@ The [Set](https://pkg.go.dev/github.com/taciogt/godash#Set) type represents a se
 * [Union(s Set[T])](https://pkg.go.dev/github.com/taciogt/godash#Set.Union)
 * [Values()](https://pkg.go.dev/github.com/taciogt/godash#Set.Values)
 
-
 ### Slices
 
 The [Slices](https://pkg.go.dev/github.com/taciogt/godash#Slice) type are a custom type over the standard slice to allow for chainable calls. The available methods for slices are:
