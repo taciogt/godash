@@ -1,6 +1,7 @@
 package godash
 
 import (
+	"reflect"
 	"slices"
 	"testing"
 )
@@ -323,6 +324,38 @@ func TestComparableSlice_FindLastIndex(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestComparableSlice_ForEach(t *testing.T) {
+	t.Run("empty slice does not call the for each function", func(t *testing.T) {
+		NewComparableSlice[int]().ForEach(func(i int, v int) {
+			t.Error("function called for empty slice")
+		})
+	})
+
+	t.Run("function does not change input slice", func(t *testing.T) {
+		s := NewComparableSlice(1, 2, 3)
+		s.ForEach(func(i int, v int) {
+			v *= 2
+		})
+		if !slices.Equal(s, NewComparableSlice(1, 2, 3)) {
+			t.Error("function should not change input slice")
+		}
+	})
+
+	t.Run("function traverse through all elements", func(t *testing.T) {
+		s := NewComparableSlice(1, 2, 3)
+
+		traversedItems := make([][]int, 0)
+		s.ForEach(func(i int, v int) {
+			traversedItems = append(traversedItems, []int{i, v})
+		})
+
+		expected := [][]int{{0, 1}, {1, 2}, {2, 3}}
+		if !reflect.DeepEqual(traversedItems, expected) {
+			t.Error("function should traverse through all items")
+		}
+	})
 }
 
 func TestIncludes(t *testing.T) {

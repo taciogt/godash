@@ -49,6 +49,10 @@ func (s ComparableSlice[T]) FindLastIndex(p Predicate[T]) (int, bool) {
 	return FindLastIndex(Slice[T](s), p)
 }
 
+func (s ComparableSlice[T]) ForEach(f func(i int, v T)) {
+	ForEach(Slice[T](s), f)
+}
+
 // Includes checks whether the specified value exists within the given ComparableSlice.
 // Returns true if found, false otherwise.
 func Includes[T comparable](s ComparableSlice[T], value T) bool {
@@ -57,6 +61,7 @@ func Includes[T comparable](s ComparableSlice[T], value T) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
