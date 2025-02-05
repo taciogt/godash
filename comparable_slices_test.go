@@ -1,6 +1,7 @@
 package godash
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -61,6 +62,67 @@ func TestComparableSlice_Every(t *testing.T) {
 			got := tt.slice.Every(tt.predicate)
 			if got != tt.expected {
 				t.Errorf("Every() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestComparableSlice_Fill(t *testing.T) {
+	tests := []struct {
+		name          string
+		slice         ComparableSlice[int]
+		value         int
+		positions     []int
+		expectedSlice ComparableSlice[int]
+	}{{
+		name:          "fill entire slice with a value",
+		slice:         NewComparableSlice(1, 2, 3, 4),
+		value:         5,
+		positions:     nil,
+		expectedSlice: NewComparableSlice(5, 5, 5, 5),
+	}, {
+		name:          "fill slice within range",
+		slice:         NewComparableSlice(1, 2, 3, 4, 5),
+		value:         9,
+		positions:     []int{1, 3},
+		expectedSlice: NewComparableSlice(1, 9, 9, 9, 5),
+	}, {
+		name:          "fill with single position (treat it as start index)",
+		slice:         NewComparableSlice(10, 20, 30, 40),
+		value:         7,
+		positions:     []int{2},
+		expectedSlice: NewComparableSlice(10, 20, 7, 7),
+	}, {
+		name:          "fill with range exceeding slice boundaries",
+		slice:         NewComparableSlice(1, 2, 3),
+		value:         0,
+		positions:     []int{1, 5},
+		expectedSlice: NewComparableSlice(1, 0, 0),
+	}, {
+		name:          "fill entire slice for empty positions parameter",
+		slice:         NewComparableSlice(6, 7, 8),
+		value:         3,
+		positions:     []int{},
+		expectedSlice: NewComparableSlice(3, 3, 3),
+	}, {
+		name:          "fill an empty slice",
+		slice:         NewComparableSlice[int](),
+		value:         9,
+		positions:     nil,
+		expectedSlice: NewComparableSlice[int](),
+	}, {
+		name:          "negative range boundaries are ignored",
+		slice:         NewComparableSlice(1, 2, 3),
+		value:         5,
+		positions:     []int{-3, -1},
+		expectedSlice: NewComparableSlice(1, 2, 3), // no change
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotSlice := tt.slice.Fill(tt.value, tt.positions...)
+			if !slices.Equal(gotSlice, tt.expectedSlice) {
+				t.Errorf("Fill() = %v, want %v", gotSlice, tt.expectedSlice)
 			}
 		})
 	}
