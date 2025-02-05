@@ -23,16 +23,47 @@ func TestComparableSlice_At(t *testing.T) {
 		expected: 5,
 	}}
 
-	t.Run(t.Name(), func(t *testing.T) {
-		for _, tt := range tests {
-			t.Run(tt.name, func(t *testing.T) {
-				got := tt.slice.At(tt.index)
-				if got != tt.expected {
-					t.Errorf("At() = %v, want %v", got, tt.expected)
-				}
-			})
-		}
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.slice.At(tt.index)
+			if got != tt.expected {
+				t.Errorf("At() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestComparableSlice_Every(t *testing.T) {
+	type test struct {
+		name      string
+		slice     ComparableSlice[int]
+		predicate func(int) bool
+		expected  bool
+	}
+	isPositive := func(n int) bool {
+		return n >= 0
+	}
+
+	tests := []test{{
+		name:      "every element is positive",
+		slice:     NewComparableSlice(1, 2, 3, 4, 5),
+		predicate: isPositive,
+		expected:  true,
+	}, {
+		name:      "not every element is positive",
+		slice:     NewComparableSlice(-1, 0, 1, 2, 3, 4),
+		predicate: isPositive,
+		expected:  false,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.slice.Every(tt.predicate)
+			if got != tt.expected {
+				t.Errorf("Every() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
 }
 
 func TestIncludes(t *testing.T) {
