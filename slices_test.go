@@ -759,6 +759,67 @@ func TestMap(t *testing.T) {
 	}
 }
 
+func TestPop(t *testing.T) {
+	tests := []struct {
+		name           string
+		slice          Slice[int]
+		expectedResult int
+		expectedOk     bool
+		expectedSlice  Slice[int]
+	}{{
+		name:           "Pop from non-empty slice",
+		slice:          Slice[int]{1, 2, 3},
+		expectedResult: 3,
+		expectedOk:     true,
+		expectedSlice:  Slice[int]{1, 2},
+	}, {
+		name:           "Pop from single-element slice",
+		slice:          Slice[int]{10},
+		expectedResult: 10,
+		expectedOk:     true,
+		expectedSlice:  Slice[int]{},
+	}, {
+		name:           "Pop from empty slice",
+		slice:          Slice[int]{},
+		expectedResult: 0, // Default value for int
+		expectedOk:     false,
+		expectedSlice:  Slice[int]{},
+	},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run("standalone function", func(t *testing.T) {
+				s := make([]int, len(tt.slice))
+				copy(s, tt.slice)
+
+				gotResult, gotOk := Pop(&s)
+				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+					t.Errorf("Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+				}
+
+				if !reflect.DeepEqual(s, tt.expectedSlice.ToRawSlice()) {
+					t.Errorf("resulting Slice = %v, want %v", s, tt.expectedSlice)
+				}
+			})
+
+			t.Run("method on Slice", func(t *testing.T) {
+				s := NewSlice[int](tt.slice...)
+				gotResult, gotOk := s.Pop()
+
+				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+					t.Errorf("Slice.Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+				}
+
+				if !reflect.DeepEqual(s, tt.expectedSlice) {
+					t.Errorf("resulting Slice = %v, want %v", s, tt.expectedSlice)
+				}
+			})
+
+		})
+	}
+}
+
 func TestReduce(t *testing.T) {
 	type inputs struct {
 		slice        []int

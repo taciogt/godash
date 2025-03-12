@@ -8,6 +8,11 @@ func NewSlice[T any](elems ...T) Slice[T] {
 	return elems
 }
 
+// ToRawSlice converts the generic Slice[T] into a standard Go slice []T, maintaining all elements in their order.
+func (s Slice[T]) ToRawSlice() []T {
+	return s
+}
+
 // At retrieves the element at the specified index of the Slice.
 // Negative indexes count backward from the end of the Slice.
 func At[T any](s Slice[T], index int) T {
@@ -186,6 +191,28 @@ func ForEach[T any, S ~[]T](s S, f func(i int, v T)) {
 // ForEach behaves exactly like [ForEach] function, except it is called directly on the slice.
 func (s Slice[T]) ForEach(f func(i int, v T)) {
 	ForEach(s, f)
+}
+
+// Pop removes and returns the last element of the slice. It also returns a boolean indicating success or failure.
+func Pop[T any, S ~*[]T](s S) (T, bool) {
+	length := len(*s)
+	if length == 0 {
+		var zero T
+		return zero, false
+	}
+
+	lastElem := (*s)[length-1]
+	*s = (*s)[:length-1]
+
+	return lastElem, true
+}
+
+// Pop behaves exactly like [Pop] function, except it is called directly on the slice.
+func (s *Slice[T]) Pop() (T, bool) {
+	rawSlice := s.ToRawSlice()
+	result, ok := Pop(&rawSlice)
+	*s = NewSlice(rawSlice...)
+	return result, ok
 }
 
 // Map takes in a slice of input values and a mapper function, and applies the mapper function to each
