@@ -63,6 +63,7 @@ The [`Slice`](https://pkg.go.dev/github.com/taciogt/godash#Slice) type extends t
 | [`Fill(value T)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Fill)       | Fills all elements with the specified value |
 | [`Pop()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Pop)                | Removes and returns the last element        |
 | [`Push(elements ...T)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Push) | Adds elements to the end of the slice       |
+| [`Reverse()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Reverse)        | Reverse the elements of the slice in place  |
 
 #### Iteration and Transformation
 

@@ -1128,6 +1128,7 @@ func TestReverse(t *testing.T) {
 						t.Errorf("Reverse(%v) = %v, want %v", tt.input, got, tt.want)
 					}
 				})
+
 				t.Run("method on slice type", func(t *testing.T) {
 					inputCopy := make([]string, len(tt.input))
 					copy(inputCopy, tt.input)
@@ -1139,7 +1140,6 @@ func TestReverse(t *testing.T) {
 						t.Errorf("s.Reverse() = %v, want %v", gotSlice, tt.want)
 					}
 				})
-
 			})
 		}
 	})
