@@ -542,102 +542,6 @@ func TestFindIndex(t *testing.T) {
 	})
 }
 
-func TestForEach(t *testing.T) {
-	noOp := func(_ *testing.T, _ []int) {}
-	traversedItems := make([][]int, 0)
-
-	tests := []struct {
-		name      string
-		input     []int
-		processFn func(i int, v int)
-		expected  func(t *testing.T, input []int)
-	}{{
-		name:  "empty slice",
-		input: []int{},
-		processFn: func(i int, v int) {
-			t.Error("function called for empty slice")
-		},
-		expected: noOp,
-	}, {
-		name:  "function doesn't change input",
-		input: []int{5},
-		processFn: func(i int, v int) {
-			v *= 2
-		},
-		expected: func(t *testing.T, input []int) {
-			if !reflect.DeepEqual(input, []int{5}) {
-				t.Error("function should not change input slice")
-			}
-		},
-	}, {
-		name:  "function traverse through all input items",
-		input: []int{1, 2, 3},
-		processFn: func(i int, v int) {
-			traversedItems = append(traversedItems, []int{i, v})
-		},
-		expected: func(t *testing.T, input []int) {
-			expected := [][]int{{0, 1}, {1, 2}, {2, 3}}
-			if !reflect.DeepEqual(traversedItems, expected) {
-				t.Error("function should traverse through all items")
-			}
-		},
-	}}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			output := make([]int, len(test.input))
-			copy(output, test.input)
-			ForEach(output, test.processFn)
-			test.expected(t, output)
-		})
-	}
-}
-
-func TestMap(t *testing.T) {
-	tt := []struct {
-		name     string
-		input    []int
-		expected []string
-		mapper   func(int) (string, error)
-		err      error
-	}{{
-		name:     "simple",
-		input:    []int{1, 2, 3},
-		expected: []string{"2", "4", "6"},
-		mapper: func(i int) (string, error) {
-			return strconv.Itoa(i * 2), nil
-		},
-		err: nil,
-	}, {
-		name:     "empty input",
-		input:    []int{},
-		expected: []string{},
-		mapper: func(i int) (string, error) {
-			return strconv.Itoa(i), nil
-		},
-		err: nil,
-	}, {
-		name:     "mapper error",
-		input:    []int{1, 2, 3},
-		expected: nil,
-		mapper: func(i int) (string, error) {
-			return "", errors.New("error")
-		},
-		err: errors.New("error"),
-	}}
-
-	for _, tc := range tt {
-		t.Run(tc.name, func(t *testing.T) {
-			actual, err := Map(tc.input, tc.mapper)
-			if !reflect.DeepEqual(tc.expected, actual) {
-				t.Errorf("expectedIndex %v, got %v", tc.expected, actual)
-			}
-			if !reflect.DeepEqual(tc.err, err) {
-				t.Errorf("expectedIndex err %v, got %v", tc.err, err)
-			}
-		})
-	}
-}
 func TestFindLast(t *testing.T) {
 	t.Run("integer slices", func(t *testing.T) {
 		tests := []struct {
@@ -756,6 +660,164 @@ func TestFindLast(t *testing.T) {
 			})
 		}
 	})
+}
+
+func TestForEach(t *testing.T) {
+	noOp := func(_ *testing.T, _ []int) {}
+	traversedItems := make([][]int, 0)
+
+	tests := []struct {
+		name      string
+		input     []int
+		processFn func(i int, v int)
+		expected  func(t *testing.T, input []int)
+	}{{
+		name:  "empty slice",
+		input: []int{},
+		processFn: func(i int, v int) {
+			t.Error("function called for empty slice")
+		},
+		expected: noOp,
+	}, {
+		name:  "function doesn't change input",
+		input: []int{5},
+		processFn: func(i int, v int) {
+			v *= 2
+		},
+		expected: func(t *testing.T, input []int) {
+			if !reflect.DeepEqual(input, []int{5}) {
+				t.Error("function should not change input slice")
+			}
+		},
+	}, {
+		name:  "function traverse through all input items",
+		input: []int{1, 2, 3},
+		processFn: func(i int, v int) {
+			traversedItems = append(traversedItems, []int{i, v})
+		},
+		expected: func(t *testing.T, input []int) {
+			expected := [][]int{{0, 1}, {1, 2}, {2, 3}}
+			if !reflect.DeepEqual(traversedItems, expected) {
+				t.Error("function should traverse through all items")
+			}
+		},
+	}}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			output := make([]int, len(test.input))
+			copy(output, test.input)
+			ForEach(output, test.processFn)
+			test.expected(t, output)
+		})
+	}
+}
+
+func TestMap(t *testing.T) {
+	tt := []struct {
+		name     string
+		input    []int
+		expected []string
+		mapper   func(int) (string, error)
+		err      error
+	}{{
+		name:     "simple",
+		input:    []int{1, 2, 3},
+		expected: []string{"2", "4", "6"},
+		mapper: func(i int) (string, error) {
+			return strconv.Itoa(i * 2), nil
+		},
+		err: nil,
+	}, {
+		name:     "empty input",
+		input:    []int{},
+		expected: []string{},
+		mapper: func(i int) (string, error) {
+			return strconv.Itoa(i), nil
+		},
+		err: nil,
+	}, {
+		name:     "mapper error",
+		input:    []int{1, 2, 3},
+		expected: nil,
+		mapper: func(i int) (string, error) {
+			return "", errors.New("error")
+		},
+		err: errors.New("error"),
+	}}
+
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			actual, err := Map(tc.input, tc.mapper)
+			if !reflect.DeepEqual(tc.expected, actual) {
+				t.Errorf("expectedIndex %v, got %v", tc.expected, actual)
+			}
+			if !reflect.DeepEqual(tc.err, err) {
+				t.Errorf("expectedIndex err %v, got %v", tc.err, err)
+			}
+		})
+	}
+}
+
+func TestPop(t *testing.T) {
+	tests := []struct {
+		name           string
+		slice          Slice[int]
+		expectedResult int
+		expectedOk     bool
+		expectedSlice  Slice[int]
+	}{{
+		name:           "Pop from non-empty slice",
+		slice:          Slice[int]{1, 2, 3},
+		expectedResult: 3,
+		expectedOk:     true,
+		expectedSlice:  Slice[int]{1, 2},
+	}, {
+		name:           "Pop from single-element slice",
+		slice:          Slice[int]{10},
+		expectedResult: 10,
+		expectedOk:     true,
+		expectedSlice:  Slice[int]{},
+	}, {
+		name:           "Pop from empty slice",
+		slice:          Slice[int]{},
+		expectedResult: 0, // Default value for int
+		expectedOk:     false,
+		expectedSlice:  Slice[int]{},
+	},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run("standalone function", func(t *testing.T) {
+				s := make([]int, len(tt.slice))
+				copy(s, tt.slice)
+
+				gotResult, gotOk := Pop(&s)
+				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+					t.Errorf("Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+				}
+
+				if !reflect.DeepEqual(s, tt.expectedSlice.ToRawSlice()) {
+					t.Errorf("resulting Slice = %v, want %v", s, tt.expectedSlice)
+				}
+			})
+
+			t.Run("method on Slice", func(t *testing.T) {
+				s := NewSlice[int](tt.slice...)
+				gotResult, gotOk := s.Pop()
+
+				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+					t.Errorf("Slice.Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+				}
+
+				if !reflect.DeepEqual(s, tt.expectedSlice) {
+					t.Errorf("resulting Slice = %v, want %v", s, tt.expectedSlice)
+				}
+			})
+
+		})
+	}
 }
 
 func TestReduce(t *testing.T) {

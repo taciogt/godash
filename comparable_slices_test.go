@@ -527,3 +527,64 @@ func TestIndexOf(t *testing.T) {
 		}
 	})
 }
+
+func TestComparableSlice_Pop(t *testing.T) {
+	tests := []struct {
+		name           string
+		slice          ComparableSlice[int]
+		expectedResult int
+		expectedOk     bool
+		expectedSlice  ComparableSlice[int]
+	}{{
+		name:           "Pop from non-empty slice",
+		slice:          ComparableSlice[int]{1, 2, 3},
+		expectedResult: 3,
+		expectedOk:     true,
+		expectedSlice:  ComparableSlice[int]{1, 2},
+	}, {
+		name:           "Pop from single-element slice",
+		slice:          ComparableSlice[int]{10},
+		expectedResult: 10,
+		expectedOk:     true,
+		expectedSlice:  ComparableSlice[int]{},
+	}, {
+		name:           "Pop from empty slice",
+		slice:          ComparableSlice[int]{},
+		expectedResult: 0, // Default value for int
+		expectedOk:     false,
+		expectedSlice:  ComparableSlice[int]{},
+	},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run("standalone function", func(t *testing.T) {
+				s := make([]int, len(tt.slice))
+				copy(s, tt.slice)
+
+				gotResult, gotOk := Pop(&s)
+				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+					t.Errorf("Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+				}
+
+				if !reflect.DeepEqual(s, tt.expectedSlice.ToRawSlice()) {
+					t.Errorf("resulting ComparableSlice = %v, want %v", s, tt.expectedSlice)
+				}
+			})
+
+			t.Run("method on ComparableSlice", func(t *testing.T) {
+				s := NewComparableSlice[int](tt.slice...)
+				gotResult, gotOk := s.Pop()
+
+				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+					t.Errorf("Slice.Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+				}
+
+				if !reflect.DeepEqual(s, tt.expectedSlice) {
+					t.Errorf("resulting ComparableSlice = %v, want %v", s, tt.expectedSlice)
+				}
+			})
+
+		})
+	}
+}
