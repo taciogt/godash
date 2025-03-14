@@ -282,3 +282,35 @@ func ReduceRight[TIn any, TOut any, S ~[]TIn](s S, reducer func(acc TOut, curr T
 
 	return acc, nil
 }
+
+// Reverse reverses the elements of a slice in place.
+// This function modifies the original slice and returns it.
+func Reverse[T any, S ~[]T](s S) S {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
+// Reverse reverses the elements of the slice in place.
+// This method modifies the original slice and returns the modified slice for chaining.
+func (s Slice[T]) Reverse() Slice[T] {
+	return Reverse(s)
+}
+
+// ToReversed returns a new slice with the elements of the input slice reversed,
+// preserving the original slice unmodified.
+func ToReversed[T any, S ~[]T](s S) []T {
+	result := make([]T, len(s))
+	l := len(s)
+	for i := len(s) - 1; i >= 0; i-- {
+		result[i] = s[l-1-i]
+	}
+	return result
+}
+
+// ToReversed creates and returns a new slice with elements in reverse order,
+// leaving the original slice unchanged.
+func (s Slice[T]) ToReversed() Slice[T] {
+	return ToReversed(s)
+}

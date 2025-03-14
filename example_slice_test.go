@@ -167,3 +167,56 @@ func ExampleReduceRight() {
 	// Output:
 	// fun is Go <nil>
 }
+
+func ExampleReverse() {
+	// Reverse a slice of integers
+	nums := []int{1, 2, 3, 4, 5}
+	reversed := godash.Reverse(nums)
+	fmt.Println("reversed integers:", reversed)
+	fmt.Println("original slice (modified):", nums)
+
+	// Output:
+	// reversed integers: [5 4 3 2 1]
+	// original slice (modified): [5 4 3 2 1]
+}
+
+func ExampleSlice_Reverse() {
+	// Create and reverse a slice of integers using the method
+	s := godash.NewSlice(1, 2, 3, 4, 5)
+	s.Reverse()
+	fmt.Println("reversed integers slice:", s)
+
+	// Chaining with other methods
+	s2 := godash.NewSlice(1, 2, 3, 4, 5, 6)
+	isEven := func(n int) bool { return n%2 == 0 }
+
+	// Chain operations: reverse the slice, then filter for even numbers
+	result := s2.Reverse().Filter(isEven)
+	fmt.Println("reversed and filtered:", result)
+
+	// Output:
+	// reversed integers slice: [5 4 3 2 1]
+	// reversed and filtered: [6 4 2]
+}
+
+func ExampleToReversed() {
+	nums := []int{1, 2, 3, 4, 5}
+	reversed := godash.ToReversed(nums)
+	fmt.Println("reversed slice:", reversed)
+	fmt.Println("original slice (unchanged):", nums)
+
+	// Output:
+	// reversed slice: [5 4 3 2 1]
+	// original slice (unchanged): [1 2 3 4 5]
+}
+
+func ExampleSlice_ToReversed() {
+	s := godash.NewSlice(1, 2, 3, 4, 5)
+	reversed := s.ToReversed()
+	fmt.Println("reversed slice:", reversed)
+	fmt.Println("original slice (unchanged):", s)
+
+	// Output:
+	// reversed slice: [5 4 3 2 1]
+	// original slice (unchanged): [1 2 3 4 5]
+}

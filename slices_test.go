@@ -1031,3 +1031,180 @@ func TestReduceRight(t *testing.T) {
 		}
 	})
 }
+
+func TestReverse(t *testing.T) {
+	t.Run("integer slices", func(t *testing.T) {
+		tests := []struct {
+			name  string
+			input []int
+			want  []int
+		}{{
+			name:  "odd length slice",
+			input: []int{1, 2, 3, 4, 5},
+			want:  []int{5, 4, 3, 2, 1},
+		}, {
+			name:  "even length slice",
+			input: []int{1, 2, 3, 4},
+			want:  []int{4, 3, 2, 1},
+		}, {
+			name:  "single element slice",
+			input: []int{42},
+			want:  []int{42},
+		}, {
+			name:  "empty slice",
+			input: []int{},
+			want:  []int{},
+		}, {
+			name:  "negative integers",
+			input: []int{-3, -2, -1, 0},
+			want:  []int{0, -1, -2, -3},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				t.Run("standalone function", func(t *testing.T) {
+					// Test the standalone function
+					inputCopy := make([]int, len(tt.input))
+					copy(inputCopy, tt.input)
+
+					got := Reverse(inputCopy)
+					if !reflect.DeepEqual(got, tt.want) {
+						t.Errorf("Reverse(%v) = %v, want %v", tt.input, got, tt.want)
+					}
+					if !reflect.DeepEqual(inputCopy, tt.want) {
+						t.Errorf("original slice wasn't modified in-place. got=%v, want=%v", inputCopy, tt.want)
+					}
+				})
+
+				t.Run("method on slice type", func(t *testing.T) {
+					inputCopy := make([]int, len(tt.input))
+					copy(inputCopy, tt.input)
+
+					s := NewSlice(inputCopy...)
+					gotSlice := s.Reverse()
+
+					if !reflect.DeepEqual(gotSlice, Slice[int](tt.want)) {
+						t.Errorf("s.Reverse() = %v, want %v", gotSlice, tt.want)
+					}
+					if !reflect.DeepEqual(s, Slice[int](tt.want)) {
+						t.Errorf("original Slice wasn't modified in-place. Got %v, want %v", s, tt.want)
+					}
+				})
+			})
+		}
+	})
+
+	t.Run("string slices", func(t *testing.T) {
+		tests := []struct {
+			name  string
+			input []string
+			want  []string
+		}{{
+			name:  "words",
+			input: []string{"hello", "world", "go", "reverse"},
+			want:  []string{"reverse", "go", "world", "hello"},
+		}, {
+			name:  "empty strings present",
+			input: []string{"", "abc", "", "def"},
+			want:  []string{"def", "", "abc", ""},
+		}, {
+			name:  "single string",
+			input: []string{"singleton"},
+			want:  []string{"singleton"},
+		}, {
+			name:  "empty slice",
+			input: []string{},
+			want:  []string{},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				t.Run("standalone function", func(t *testing.T) {
+					inputCopy := make([]string, len(tt.input))
+					copy(inputCopy, tt.input)
+
+					got := Reverse(inputCopy)
+					if !reflect.DeepEqual(got, tt.want) {
+						t.Errorf("Reverse(%v) = %v, want %v", tt.input, got, tt.want)
+					}
+				})
+
+				t.Run("method on slice type", func(t *testing.T) {
+					inputCopy := make([]string, len(tt.input))
+					copy(inputCopy, tt.input)
+
+					s := NewSlice(inputCopy...)
+					gotSlice := s.Reverse()
+
+					if !reflect.DeepEqual(gotSlice, Slice[string](tt.want)) {
+						t.Errorf("s.Reverse() = %v, want %v", gotSlice, tt.want)
+					}
+				})
+			})
+		}
+	})
+}
+
+func TestToReversed(t *testing.T) {
+	t.Run("integer slices", func(t *testing.T) {
+		tests := []struct {
+			name  string
+			input []int
+			want  []int
+		}{{
+			name:  "odd length slice",
+			input: []int{1, 2, 3, 4, 5},
+			want:  []int{5, 4, 3, 2, 1},
+		}, {
+			name:  "even length slice",
+			input: []int{1, 2, 3, 4},
+			want:  []int{4, 3, 2, 1},
+		}, {
+			name:  "single element slice",
+			input: []int{42},
+			want:  []int{42},
+		}, {
+			name:  "empty slice",
+			input: []int{},
+			want:  []int{},
+		}, {
+			name:  "negative integers",
+			input: []int{-3, -2, -1, 0},
+			want:  []int{0, -1, -2, -3},
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				t.Run("standalone function", func(t *testing.T) {
+					// Test the standalone function
+					inputCopy := make([]int, len(tt.input))
+					copy(inputCopy, tt.input)
+
+					got := ToReversed(inputCopy)
+					if !reflect.DeepEqual(got, tt.want) {
+						t.Errorf("Reverse(%v) = %v, want %v", tt.input, got, tt.want)
+					}
+					if !reflect.DeepEqual(inputCopy, tt.input) {
+						t.Errorf("original slice was modified in-place. got=%v, want=%v", inputCopy, tt.want)
+					}
+				})
+
+				t.Run("method on slice type", func(t *testing.T) {
+					inputCopy := make([]int, len(tt.input))
+					copy(inputCopy, tt.input)
+
+					s := NewSlice(inputCopy...)
+					gotSlice := s.ToReversed()
+
+					if !reflect.DeepEqual(gotSlice, Slice[int](tt.want)) {
+						t.Errorf("s.Reverse() = %v, want %v", gotSlice, tt.want)
+					}
+					if !reflect.DeepEqual(s, Slice[int](tt.input)) {
+						t.Errorf("original Slice wasn't modified in-place. Got %v, want %v", s, tt.want)
+					}
+				})
+			})
+		}
+	})
+
+}
