@@ -57,13 +57,14 @@ The [`Slice`](https://pkg.go.dev/github.com/taciogt/godash#Slice) type extends t
 
 #### Basic Slice Methods
 
-| Method                                                                           | Description                                 |
-|----------------------------------------------------------------------------------|---------------------------------------------|
-| [`At(index int)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.At)         | Returns the element at the specified index  |
-| [`Fill(value T)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Fill)       | Fills all elements with the specified value |
-| [`Pop()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Pop)                | Removes and returns the last element        |
-| [`Push(elements ...T)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Push) | Adds elements to the end of the slice       |
-| [`Reverse()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Reverse)        | Reverse the elements of the slice in place  |
+| Method                                                                           | Description                                                    |
+|----------------------------------------------------------------------------------|----------------------------------------------------------------|
+| [`At(index int)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.At)         | Returns the element at the specified index                     |
+| [`Fill(value T)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Fill)       | Fills all elements with the specified value                    |
+| [`Pop()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Pop)                | Removes and returns the last element                           |
+| [`Push(elements ...T)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Push) | Adds elements to the end of the slice                          |
+| [`Reverse()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Reverse)        | Reverse the elements of the slice in place                     |
+| [`ToReversed()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.ToReversed)  | Creates and returns a new slice with elements in reverse order |
 
 #### Iteration and Transformation
 
