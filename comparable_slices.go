@@ -13,12 +13,6 @@ func NewComparableSlice[T comparable](elems ...T) ComparableSlice[T] {
 	return ComparableSlice[T]{NewSlice(elems...)}
 }
 
-// ToRawSlice converts the generic ComparableSlice[T] into a standard Go slice []T,
-// maintaining all elements in their order.
-func (s ComparableSlice[T]) ToRawSlice() []T {
-	return s.Slice
-}
-
 // Includes checks whether the specified value exists within the given ComparableSlice.
 // Returns true if found, false otherwise.
 func Includes[T comparable](s ComparableSlice[T], value T) bool {
