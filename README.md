@@ -64,6 +64,7 @@ The [`Slice`](https://pkg.go.dev/github.com/taciogt/godash#Slice) type extends t
 | [`Pop()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Pop)                | Removes and returns the last element                           |
 | [`Push(elements ...T)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Push) | Adds elements to the end of the slice                          |
 | [`Reverse()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Reverse)        | Reverse the elements of the slice in place                     |
+| [`Shift()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Shift)            | Removes and returns the first element of the provided slice    |
 | [`ToReversed()`](https://pkg.go.dev/github.com/taciogt/godash#Slice.ToReversed)  | Creates and returns a new slice with elements in reverse order |
 
 #### Iteration and Transformation
