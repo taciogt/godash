@@ -122,7 +122,7 @@ func TestComparableSlice_Fill(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotSlice := tt.slice.Fill(tt.value, tt.positions...)
-			if !slices.Equal(gotSlice, tt.expectedSlice) {
+			if !slices.Equal(gotSlice, tt.expectedSlice.Slice) {
 				t.Errorf("Fill() = %v, want %v", gotSlice, tt.expectedSlice)
 			}
 		})
@@ -158,7 +158,7 @@ func TestComparableSlice_Filter(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.slice.Filter(tt.predicate)
-			if !slices.Equal(got, tt.expected) {
+			if !slices.Equal(got, tt.expected.Slice) {
 				t.Errorf("Filter() = %v, want %v", got, tt.expected)
 			}
 		})
@@ -338,7 +338,7 @@ func TestComparableSlice_ForEach(t *testing.T) {
 		s.ForEach(func(i int, v int) {
 			v *= 2
 		})
-		if !slices.Equal(s, NewComparableSlice(1, 2, 3)) {
+		if !slices.Equal(s.Slice, NewComparableSlice(1, 2, 3).Slice) {
 			t.Error("function should not change input slice")
 		}
 	})
@@ -366,27 +366,27 @@ func TestIncludes(t *testing.T) {
 		expected bool
 	}{{
 		name:     "element exists in slice",
-		slice:    ComparableSlice[int]{1, 2, 3, 4, 5},
+		slice:    NewComparableSlice(1, 2, 3, 4, 5),
 		search:   3,
 		expected: true,
 	}, {
 		name:     "element does not exist in slice",
-		slice:    ComparableSlice[int]{1, 2, 3, 4, 5},
+		slice:    NewComparableSlice(1, 2, 3, 4, 5),
 		search:   6,
 		expected: false,
 	}, {
 		name:     "empty slice",
-		slice:    ComparableSlice[int]{},
+		slice:    NewComparableSlice[int](),
 		search:   1,
 		expected: false,
 	}, {
 		name:     "slice with duplicates contains the element",
-		slice:    ComparableSlice[int]{1, 2, 2, 3, 3},
+		slice:    NewComparableSlice(1, 2, 2, 3, 3),
 		search:   2,
 		expected: true,
 	}, {
 		name:     "slice with negative numbers contains the element",
-		slice:    ComparableSlice[int]{-1, -2, -3, -4},
+		slice:    NewComparableSlice(-1, -2, -3, -4),
 		search:   -3,
 		expected: true,
 	}}
@@ -401,7 +401,7 @@ func TestIncludes(t *testing.T) {
 	}
 
 	t.Run("string slices", func(t *testing.T) {
-		slice := ComparableSlice[string]{"apple", "banana", "cherry"}
+		slice := NewComparableSlice[string]("apple", "banana", "cherry")
 		if !slice.Includes("banana") {
 			t.Errorf("Includes() = false, want true for 'banana'")
 		}
@@ -415,10 +415,10 @@ func TestIncludes(t *testing.T) {
 			id   int
 			name string
 		}
-		slice := ComparableSlice[customStruct]{
-			{id: 1, name: "Alice"},
-			{id: 2, name: "Bob"},
-		}
+		slice := NewComparableSlice[customStruct](
+			customStruct{id: 1, name: "Alice"},
+			customStruct{id: 2, name: "Bob"},
+		)
 		search := customStruct{id: 1, name: "Alice"}
 		if !slice.Includes(search) {
 			t.Errorf("Includes() = false, want true for %v", search)
@@ -445,7 +445,7 @@ func TestIndexOf(t *testing.T) {
 		expectedExists: true,
 	}, {
 		name:           "element does not exist in slice",
-		slice:          ComparableSlice[int]{1, 2, 3, 4, 5},
+		slice:          NewComparableSlice(1, 2, 3, 4, 5),
 		search:         6,
 		expectedIndex:  -1,
 		expectedExists: false,
@@ -457,25 +457,25 @@ func TestIndexOf(t *testing.T) {
 		expectedExists: false,
 	}, {
 		name:           "first element in slice",
-		slice:          ComparableSlice[int]{7, 8, 9},
+		slice:          NewComparableSlice(7, 8, 9),
 		search:         7,
 		expectedIndex:  0,
 		expectedExists: true,
 	}, {
 		name:           "last element in slice",
-		slice:          ComparableSlice[int]{10, 20, 30},
+		slice:          NewComparableSlice(10, 20, 30),
 		search:         30,
 		expectedIndex:  2,
 		expectedExists: true,
 	}, {
 		name:           "slice with duplicates",
-		slice:          ComparableSlice[int]{1, 2, 2, 3, 3},
+		slice:          NewComparableSlice(1, 2, 2, 3, 3),
 		search:         2,
 		expectedIndex:  1,
 		expectedExists: true,
 	}, {
 		name:           "slice with negative numbers",
-		slice:          ComparableSlice[int]{-1, -2, -3, -4},
+		slice:          NewComparableSlice(-1, -2, -3, -4),
 		search:         -3,
 		expectedIndex:  2,
 		expectedExists: true,
@@ -492,7 +492,7 @@ func TestIndexOf(t *testing.T) {
 	}
 
 	t.Run("string slices", func(t *testing.T) {
-		slice := ComparableSlice[string]{"apple", "banana", "cherry"}
+		slice := NewComparableSlice[string]("apple", "banana", "cherry")
 		index, exists := slice.IndexOf("banana")
 		if index != 1 || !exists {
 			t.Errorf("IndexOf() = %v, %v, want 1, true for 'banana'", index, exists)
@@ -509,11 +509,11 @@ func TestIndexOf(t *testing.T) {
 			id   int
 			name string
 		}
-		slice := ComparableSlice[customStruct]{
-			{id: 1, name: "Alice"},
-			{id: 2, name: "Bob"},
-			{id: 3, name: "Charlie"},
-		}
+		slice := NewComparableSlice[customStruct](
+			customStruct{id: 1, name: "Alice"},
+			customStruct{id: 2, name: "Bob"},
+			customStruct{id: 3, name: "Charlie"},
+		)
 		search := customStruct{id: 2, name: "Bob"}
 		index, exists := slice.IndexOf(search)
 		if index != 1 || !exists {
@@ -531,57 +531,43 @@ func TestIndexOf(t *testing.T) {
 func TestComparableSlice_Pop(t *testing.T) {
 	tests := []struct {
 		name           string
-		slice          ComparableSlice[int]
+		slice          []int
 		expectedResult int
 		expectedOk     bool
-		expectedSlice  ComparableSlice[int]
+		expectedSlice  []int
 	}{{
 		name:           "Pop from non-empty slice",
-		slice:          ComparableSlice[int]{1, 2, 3},
+		slice:          []int{1, 2, 3},
 		expectedResult: 3,
 		expectedOk:     true,
-		expectedSlice:  ComparableSlice[int]{1, 2},
+		expectedSlice:  []int{1, 2},
 	}, {
 		name:           "Pop from single-element slice",
-		slice:          ComparableSlice[int]{10},
+		slice:          []int{10},
 		expectedResult: 10,
 		expectedOk:     true,
-		expectedSlice:  ComparableSlice[int]{},
+		expectedSlice:  []int{},
 	}, {
 		name:           "Pop from empty slice",
-		slice:          ComparableSlice[int]{},
+		slice:          []int{},
 		expectedResult: 0, // Default value for int
 		expectedOk:     false,
-		expectedSlice:  ComparableSlice[int]{},
+		expectedSlice:  []int{},
 	},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Run("standalone function", func(t *testing.T) {
-				s := make([]int, len(tt.slice))
-				copy(s, tt.slice)
-
-				gotResult, gotOk := Pop(&s)
-				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
-					t.Errorf("Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
-				}
-
-				if !reflect.DeepEqual(s, tt.expectedSlice.ToRawSlice()) {
-					t.Errorf("resulting ComparableSlice = %v, want %v", s, tt.expectedSlice)
-				}
-			})
-
 			t.Run("method on ComparableSlice", func(t *testing.T) {
-				s := NewComparableSlice[int](tt.slice...)
-				gotResult, gotOk := s.Pop()
+				s := NewComparableSlice(tt.slice...)
 
+				gotResult, gotOk := s.Pop()
 				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
 					t.Errorf("Slice.Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
 				}
 
-				if !reflect.DeepEqual(s, tt.expectedSlice) {
-					t.Errorf("resulting ComparableSlice = %v, want %v", s, tt.expectedSlice)
+				if !reflect.DeepEqual(s.ToRawSlice(), tt.expectedSlice) {
+					t.Errorf("resulting %v, want %v", s.Slice, tt.expectedSlice)
 				}
 			})
 
