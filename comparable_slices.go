@@ -9,6 +9,12 @@ func NewComparableSlice[T comparable](elems ...T) ComparableSlice[T] {
 	return elems
 }
 
+// ToRawSlice converts the generic ComparableSlice[T] into a standard Go slice []T,
+// maintaining all elements in their order.
+func (s ComparableSlice[T]) ToRawSlice() []T {
+	return s
+}
+
 // At behaves as the method [Slice.At]
 func (s ComparableSlice[T]) At(index int) T {
 	return At[T](Slice[T](s), index)
@@ -78,4 +84,11 @@ func IndexOf[T comparable](s ComparableSlice[T], value T) (int, bool) {
 
 func (s ComparableSlice[T]) IndexOf(value T) (int, bool) {
 	return IndexOf(s, value)
+}
+
+func (s *ComparableSlice[T]) Pop() (T, bool) {
+	rawSlice := s.ToRawSlice()
+	result, ok := Pop(&rawSlice)
+	*s = NewComparableSlice(rawSlice...)
+	return result, ok
 }

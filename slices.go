@@ -193,7 +193,9 @@ func (s Slice[T]) ForEach(f func(i int, v T)) {
 	ForEach(s, f)
 }
 
-// Pop removes and returns the last element of the slice. It also returns a boolean indicating success or failure.
+// Pop removes and returns the last element from the slice pointed to by `s`.
+// If the slice is empty, it returns the zero value of type `T` and `false`.
+// The function modifies the original slice by updating it with one less element.
 func Pop[T any, S ~*[]T](s S) (T, bool) {
 	length := len(*s)
 	if length == 0 {
