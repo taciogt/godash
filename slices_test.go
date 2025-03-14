@@ -798,7 +798,7 @@ func TestPop(t *testing.T) {
 					t.Errorf("Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
 				}
 
-				if !reflect.DeepEqual(s, tt.expectedSlice.ToRawSlice()) {
+				if !reflect.DeepEqual(s, tt.expectedSlice.ToRaw()) {
 					t.Errorf("resulting Slice = %v, want %v", s, tt.expectedSlice)
 				}
 			})
@@ -816,6 +816,64 @@ func TestPop(t *testing.T) {
 				}
 			})
 
+		})
+	}
+}
+
+func TestPush(t *testing.T) {
+	tests := []struct {
+		name           string
+		initialSlice   []int
+		valuesToAdd    []int
+		expectedSlice  []int
+		expectedLength int
+	}{{
+		name:           "push to empty slice",
+		initialSlice:   []int{},
+		valuesToAdd:    []int{1, 2, 3},
+		expectedSlice:  []int{1, 2, 3},
+		expectedLength: 3,
+	}, {
+		name:           "push single value",
+		initialSlice:   []int{1, 2, 3},
+		valuesToAdd:    []int{4},
+		expectedSlice:  []int{1, 2, 3, 4},
+		expectedLength: 4,
+	}, {
+		name:           "push multiple values",
+		initialSlice:   []int{1},
+		valuesToAdd:    []int{2, 3, 4},
+		expectedSlice:  []int{1, 2, 3, 4},
+		expectedLength: 4,
+	}, {
+		name:           "push empty values to slice",
+		initialSlice:   []int{1, 2, 3},
+		valuesToAdd:    []int{},
+		expectedSlice:  []int{1, 2, 3},
+		expectedLength: 3,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run("standalone function", func(t *testing.T) {
+				s := make([]int, len(tt.initialSlice))
+				copy(s, tt.initialSlice)
+
+				gotLength := Push(&s, tt.valuesToAdd...)
+				if !reflect.DeepEqual(s, tt.expectedSlice) || gotLength != tt.expectedLength {
+					t.Errorf("Push() got slice=%v length=%d, want slice=%v, length=%d",
+						s, gotLength, tt.expectedSlice, tt.expectedLength)
+				}
+			})
+
+			t.Run("method on Slice", func(t *testing.T) {
+				s := NewSlice[int](tt.initialSlice...)
+				gotLength := s.Push(tt.valuesToAdd...)
+				if !reflect.DeepEqual(s.ToRaw(), tt.expectedSlice) || gotLength != tt.expectedLength {
+					t.Errorf("Push() got slice=%v length=%d, want slice=%v length=%d",
+						s, gotLength, tt.expectedSlice, tt.expectedLength)
+				}
+			})
 		})
 	}
 }

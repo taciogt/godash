@@ -580,8 +580,41 @@ func TestComparableSlice_Pop(t *testing.T) {
 				t.Errorf("Slice.Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
 			}
 
-			if !reflect.DeepEqual(s.ToRawSlice(), tt.expectedSlice) {
-				t.Errorf("resulting %v, want %v", s.ToRawSlice(), tt.expectedSlice)
+			if !reflect.DeepEqual(s.ToRaw(), tt.expectedSlice) {
+				t.Errorf("resulting %v, want %v", s.ToRaw(), tt.expectedSlice)
+			}
+		})
+	}
+}
+
+func TestComparableSlice_Push(t *testing.T) {
+	tests := []struct {
+		name           string
+		slice          []int
+		value          int
+		expectedResult []int
+		expectedLength int
+	}{{
+		name:           "Push to empty slice",
+		slice:          []int{},
+		value:          1,
+		expectedResult: []int{1},
+		expectedLength: 1,
+	}, {
+		name:           "Push to non-empty slice",
+		slice:          []int{1, 2, 3},
+		value:          4,
+		expectedResult: []int{1, 2, 3, 4},
+		expectedLength: 4,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := NewComparableSlice(tt.slice...)
+			gotLength := s.Push(tt.value)
+			if !reflect.DeepEqual(s.ToRaw(), tt.expectedResult) || gotLength != len(tt.expectedResult) {
+				t.Errorf("Slice.Push() got slice=%v length=%d, want slice=%v length=%d",
+					s.ToRaw(), gotLength, tt.expectedResult, tt.expectedLength)
 			}
 		})
 	}

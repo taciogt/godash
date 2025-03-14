@@ -8,8 +8,8 @@ func NewSlice[T any](elems ...T) Slice[T] {
 	return elems
 }
 
-// ToRawSlice converts the generic Slice[T] into a standard Go slice []T, maintaining all elements in their order.
-func (s Slice[T]) ToRawSlice() []T {
+// ToRaw converts the generic Slice[T] into a standard Go slice []T, maintaining all elements in their order.
+func (s Slice[T]) ToRaw() []T {
 	return s
 }
 
@@ -193,6 +193,22 @@ func (s Slice[T]) ForEach(f func(i int, v T)) {
 	ForEach(s, f)
 }
 
+// Map takes in a slice of input values and a mapper function, and applies the mapper function to each
+// input value. It returns a new slice containing the mapped values. If any error occurs during the mapping
+// process, the function aborts and returns nil along with the error. Otherwise, it returns the new slice
+// of mapped values and a nil error.
+func Map[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) (TOutput, error)) ([]TOutput, error) {
+	result := make([]TOutput, len(s))
+	for i, value := range s {
+		mapped, err := mapper(value)
+		if err != nil {
+			return nil, err
+		}
+		result[i] = mapped
+	}
+	return result, nil
+}
+
 // Pop removes and returns the last element from the slice pointed to by `s`.
 // If the slice is empty, it returns the zero value of type `T` and `false`.
 // The function modifies the original slice by updating it with one less element.
@@ -211,26 +227,25 @@ func Pop[T any, S ~*[]T](s S) (T, bool) {
 
 // Pop behaves exactly like [Pop] function, except it is called directly on the slice.
 func (s *Slice[T]) Pop() (T, bool) {
-	rawSlice := s.ToRawSlice()
+	rawSlice := s.ToRaw()
 	result, ok := Pop(&rawSlice)
 	*s = NewSlice(rawSlice...)
 	return result, ok
 }
 
-// Map takes in a slice of input values and a mapper function, and applies the mapper function to each
-// input value. It returns a new slice containing the mapped values. If any error occurs during the mapping
-// process, the function aborts and returns nil along with the error. Otherwise, it returns the new slice
-// of mapped values and a nil error.
-func Map[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) (TOutput, error)) ([]TOutput, error) {
-	result := make([]TOutput, len(s))
-	for i, value := range s {
-		mapped, err := mapper(value)
-		if err != nil {
-			return nil, err
-		}
-		result[i] = mapped
-	}
-	return result, nil
+// Push appends the provided values to the slice and returns the new size of the slice.
+// The function modifies the original slice in place.
+func Push[T any, S ~*[]T](s S, value ...T) (length int) {
+	*s = append(*s, value...)
+	return len(*s)
+}
+
+// Push behaves exactly like [Push] function, except it is called directly on the slice.
+func (s *Slice[T]) Push(value ...T) (length int) {
+	rawSlice := s.ToRaw()
+	length = Push(&rawSlice, value...)
+	*s = NewSlice(rawSlice...)
+	return length
 }
 
 // Reduce iterates over the elements in the slice and applies the reducer function to each element,
