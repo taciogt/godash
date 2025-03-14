@@ -109,3 +109,21 @@ func ExampleSlice_Find() {
 	// Output:
 	// abc true
 }
+
+func ExamplePop() {
+	s := []int{1, 2, 3, 4, 5}
+	fmt.Println(godash.Pop(&s))
+	fmt.Println(s)
+	// Output:
+	// 5 true
+	// [1 2 3 4]
+}
+
+func ExampleSlice_Pop() {
+	s := godash.NewSlice(1, 2, 3, 4, 5)
+	fmt.Println(s.Pop())
+	fmt.Println(s)
+	// Output:
+	// 5 true
+	// [1 2 3 4]
+}
