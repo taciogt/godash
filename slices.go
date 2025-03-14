@@ -314,3 +314,25 @@ func ToReversed[T any, S ~[]T](s S) []T {
 func (s Slice[T]) ToReversed() Slice[T] {
 	return ToReversed(s)
 }
+
+// Shift removes and returns the first element of the provided slice, modifying the original slice.
+// If the slice is empty, it returns the zero value of type `T` and `false`.
+func Shift[T any, S ~*[]T](s S) (T, bool) {
+	length := len(*s)
+	if length == 0 {
+		var zero T
+		return zero, false
+	}
+	firstElem := (*s)[0]
+	*s = (*s)[1:]
+	return firstElem, true
+}
+
+// Shift removes and returns the first element of the slice, updating the original slice.
+// If the slice is empty, it returns the zero value of type `T` and `false`.
+func (s *Slice[T]) Shift() (T, bool) {
+	rawSlice := s.ToRaw()
+	result, ok := Shift(&rawSlice)
+	*s = NewSlice(rawSlice...)
+	return result, ok
+}
