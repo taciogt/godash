@@ -8,8 +8,8 @@ func NewSlice[T any](elems ...T) Slice[T] {
 	return elems
 }
 
-// ToRawSlice converts the generic Slice[T] into a standard Go slice []T, maintaining all elements in their order.
-func (s Slice[T]) ToRawSlice() []T {
+// ToRaw converts the generic Slice[T] into a standard Go slice []T, maintaining all elements in their order.
+func (s Slice[T]) ToRaw() []T {
 	return s
 }
 
@@ -227,10 +227,25 @@ func Pop[T any, S ~*[]T](s S) (T, bool) {
 
 // Pop behaves exactly like [Pop] function, except it is called directly on the slice.
 func (s *Slice[T]) Pop() (T, bool) {
-	rawSlice := s.ToRawSlice()
+	rawSlice := s.ToRaw()
 	result, ok := Pop(&rawSlice)
 	*s = NewSlice(rawSlice...)
 	return result, ok
+}
+
+// Push appends the provided values to the slice and returns the new size of the slice.
+// The function modifies the original slice in place.
+func Push[T any, S ~*[]T](s S, value ...T) (length int) {
+	*s = append(*s, value...)
+	return len(*s)
+}
+
+// Push behaves exactly like [Push] function, except it is called directly on the slice.
+func (s *Slice[T]) Push(value ...T) (length int) {
+	rawSlice := s.ToRaw()
+	length = Push(&rawSlice, value...)
+	*s = NewSlice(rawSlice...)
+	return length
 }
 
 // Reduce iterates over the elements in the slice and applies the reducer function to each element,
