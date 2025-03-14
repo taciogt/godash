@@ -145,3 +145,24 @@ func ExampleSlice_Push() {
 	// 8
 	// [1 2 3 4 5 6 7 8]
 }
+
+func ExampleReduce() {
+	numbers := []int{1, 2, 3, 4, 5}
+	sum := func(acc, val int) (int, error) {
+		return acc + val, nil
+	}
+	result, err := godash.Reduce(numbers, sum, 0)
+	fmt.Println(result, err)
+	// Output:
+	// 15 <nil>
+}
+func ExampleReduceRight() {
+	words := []string{"Go", "is", "fun"}
+	concat := func(acc, val string) (string, error) {
+		return acc + " " + val, nil
+	}
+	result, err := godash.ReduceRight(words, concat, "")
+	fmt.Println(result, err)
+	// Output:
+	// fun is Go <nil>
+}
