@@ -56,8 +56,8 @@ The [Slices](https://pkg.go.dev/github.com/taciogt/godash#Slice) type are a cust
 * [Reduce()](https://pkg.go.dev/github.com/taciogt/godash#Reduce)
 * [Pop()](https://pkg.go.dev/github.com/taciogt/godash#Slice.Pop)
 
-Some extra functionality is supported by the more specific [ComparableSlice](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice) type: 
-* 
+Some extra functionality is supported by the more specific [ComparableSlice](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice) type:
+
 * [Includes()](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice.Includes)
 * [IndexOf()](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice.IndexOf)
 
