@@ -959,3 +959,75 @@ func TestReduce(t *testing.T) {
 		})
 	}
 }
+
+func TestReduceRight(t *testing.T) {
+	t.Run("int sum", func(t *testing.T) {
+		nums := []int{1, 2, 3, 4}
+		reducer := func(acc int, curr int) (int, error) {
+			return acc + curr, nil
+		}
+		got, err := ReduceRight(nums, reducer, 0)
+
+		want := 10
+		if got != want || err != nil {
+			t.Errorf("unexpected result: got result=%d, err=%v, want result=%d, error=%v", got, err, want, nil)
+		}
+
+	})
+
+	t.Run("string concatenation", func(t *testing.T) {
+		words := []string{"foo", "bar", "baz"}
+		reducer := func(acc string, curr string) (string, error) {
+			return acc + curr, nil
+		}
+		got, err := ReduceRight(words, reducer, "")
+
+		want := "bazbarfoo"
+		if got != want || err != nil {
+			t.Errorf("unexpected result: got result=%s, err=%v, want result=%s, error=%v", got, err, want, nil)
+		}
+	})
+
+	t.Run("with error", func(t *testing.T) {
+		nums := []int{1, 2, 3, 4}
+		customErr := errors.New("value 2 encountered")
+		reducer := func(acc int, curr int) (int, error) {
+			if curr == 2 {
+				return acc, customErr
+			}
+			return acc + curr, nil
+		}
+		got, err := ReduceRight(nums, reducer, 0)
+
+		want := 7
+		if got != want || !errors.Is(err, customErr) {
+			t.Errorf("unexpected result: got result=%d, err=%v, want result=%d, error=%v", got, err, want, customErr)
+		}
+	})
+
+	t.Run("empty slice", func(t *testing.T) {
+		nums := []int{}
+		reducer := func(acc int, curr int) (int, error) {
+			return acc + curr, nil
+		}
+		got, err := ReduceRight(nums, reducer, 42)
+
+		want := 42
+		if got != want || err != nil {
+			t.Errorf("unexpected result: got result=%d, err=%v, want result=%d, error=%v", got, err, want, nil)
+		}
+	})
+
+	t.Run("different input and output types", func(t *testing.T) {
+		nums := []int{1, 2, 3, 4}
+		reducer := func(acc string, curr int) (string, error) {
+			return acc + strconv.Itoa(curr), nil
+		}
+		got, err := ReduceRight(nums, reducer, "")
+
+		want := "4321"
+		if got != want || err != nil {
+			t.Errorf("unexpected result: got result=%s, err=%v, want result=%s, error=%v", got, err, want, nil)
+		}
+	})
+}
