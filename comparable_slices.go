@@ -13,8 +13,9 @@ func NewComparableSlice[T comparable](elems ...T) ComparableSlice[T] {
 
 // Includes checks whether the specified value exists within the given ComparableSlice.
 // Returns true if found, false otherwise.
-func Includes[T comparable](s ComparableSlice[T], value T) bool {
-	for _, v := range s.Slice {
+func Includes[T comparable, S ~[]T](s S, value T) bool {
+	// TODO implement the Some method and refactor to use it
+	for _, v := range s {
 		if v == value {
 			return true
 		}
@@ -25,7 +26,7 @@ func Includes[T comparable](s ComparableSlice[T], value T) bool {
 
 // Includes behaves exactly like [Includes] function, except it is called directly on the slice.
 func (s ComparableSlice[T]) Includes(value T) bool {
-	return Includes(s, value)
+	return Includes(s.Slice, value)
 }
 
 func IndexOf[T comparable](s ComparableSlice[T], value T) (int, bool) {

@@ -361,42 +361,57 @@ func TestComparableSlice_ForEach(t *testing.T) {
 func TestIncludes(t *testing.T) {
 	tests := []struct {
 		name     string
-		slice    ComparableSlice[int]
+		slice    []int
 		search   int
 		expected bool
 	}{{
 		name:     "element exists in slice",
-		slice:    NewComparableSlice(1, 2, 3, 4, 5),
+		slice:    []int{1, 2, 3, 4, 5},
 		search:   3,
 		expected: true,
 	}, {
 		name:     "element does not exist in slice",
-		slice:    NewComparableSlice(1, 2, 3, 4, 5),
+		slice:    []int{1, 2, 3, 4, 5},
 		search:   6,
 		expected: false,
 	}, {
 		name:     "empty slice",
-		slice:    NewComparableSlice[int](),
+		slice:    []int{},
+		search:   1,
+		expected: false,
+	}, {
+		name:     "nil slice",
+		slice:    nil,
 		search:   1,
 		expected: false,
 	}, {
 		name:     "slice with duplicates contains the element",
-		slice:    NewComparableSlice(1, 2, 2, 3, 3),
+		slice:    []int{1, 2, 2, 3, 3},
 		search:   2,
 		expected: true,
 	}, {
 		name:     "slice with negative numbers contains the element",
-		slice:    NewComparableSlice(-1, -2, -3, -4),
+		slice:    []int{-1, -2, -3, -4},
 		search:   -3,
 		expected: true,
 	}}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.slice.Includes(tt.search)
-			if got != tt.expected {
-				t.Errorf("Includes() = %v, want %v", got, tt.expected)
-			}
+			t.Run("standalone function", func(t *testing.T) {
+				got := Includes(tt.slice, tt.search)
+				if got != tt.expected {
+					t.Errorf("Includes() = %v, want %v", got, tt.expected)
+				}
+			})
+
+			t.Run("receiver method", func(t *testing.T) {
+				slice := NewComparableSlice(tt.slice...)
+				got := slice.Includes(tt.search)
+				if got != tt.expected {
+					t.Errorf("Includes() = %v, want %v", got, tt.expected)
+				}
+			})
 		})
 	}
 
