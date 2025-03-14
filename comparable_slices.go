@@ -7,8 +7,6 @@ type ComparableSlice[T comparable] struct {
 	Slice[T]
 }
 
-//type ComparableSlice[T comparable] Slice[T]
-
 func NewComparableSlice[T comparable](elems ...T) ComparableSlice[T] {
 	return ComparableSlice[T]{NewSlice(elems...)}
 }
