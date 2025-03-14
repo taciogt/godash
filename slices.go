@@ -297,3 +297,20 @@ func Reverse[T any, S ~[]T](s S) S {
 func (s Slice[T]) Reverse() Slice[T] {
 	return Reverse(s)
 }
+
+// ToReversed returns a new slice with the elements of the input slice reversed,
+// preserving the original slice unmodified.
+func ToReversed[T any, S ~[]T](s S) []T {
+	result := make([]T, len(s))
+	l := len(s)
+	for i := len(s) - 1; i >= 0; i-- {
+		result[i] = s[l-1-i]
+	}
+	return result
+}
+
+// ToReversed creates and returns a new slice with elements in reverse order,
+// leaving the original slice unchanged.
+func (s Slice[T]) ToReversed() Slice[T] {
+	return ToReversed(s)
+}
