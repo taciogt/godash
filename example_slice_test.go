@@ -127,3 +127,21 @@ func ExampleSlice_Pop() {
 	// 5 true
 	// [1 2 3 4]
 }
+
+func ExamplePush() {
+	s := []int{1, 2, 3}
+	fmt.Println(godash.Push(&s, 4, 5))
+	fmt.Println(s)
+	// Output:
+	// 5
+	// [1 2 3 4 5]
+}
+
+func ExampleSlice_Push() {
+	s := godash.NewSlice(1, 2, 3, 4, 5)
+	fmt.Println(s.Push(6, 7, 8))
+	fmt.Println(s)
+	// Output:
+	// 8
+	// [1 2 3 4 5 6 7 8]
+}
