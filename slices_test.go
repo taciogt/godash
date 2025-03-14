@@ -1206,5 +1206,63 @@ func TestToReversed(t *testing.T) {
 			})
 		}
 	})
+}
 
+func TestShift(t *testing.T) {
+	tests := []struct {
+		name           string
+		initialSlice   []int
+		expectedResult int
+		expectedOk     bool
+		expectedSlice  []int
+	}{{
+		name:           "Shift from non-empty slice",
+		initialSlice:   []int{1, 2, 3},
+		expectedResult: 1,
+		expectedOk:     true,
+		expectedSlice:  []int{2, 3},
+	}, {
+		name:           "Shift single-element slice",
+		initialSlice:   []int{10},
+		expectedResult: 10,
+		expectedOk:     true,
+		expectedSlice:  []int{},
+	}, {
+		name:           "Shift empty slice",
+		initialSlice:   []int{},
+		expectedResult: 0, // Default value for int
+		expectedOk:     false,
+		expectedSlice:  []int{},
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run("standalone function", func(t *testing.T) {
+				s := make([]int, len(tt.initialSlice))
+				copy(s, tt.initialSlice)
+
+				gotResult, gotOk := Shift(&s)
+				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+					t.Errorf("Shift() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+				}
+
+				if !reflect.DeepEqual(s, tt.expectedSlice) {
+					t.Errorf("resulting slice = %v, want %v", s, tt.expectedSlice)
+				}
+			})
+
+			t.Run("method on Slice", func(t *testing.T) {
+				s := NewSlice[int](tt.initialSlice...)
+				gotResult, gotOk := s.Shift()
+
+				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+					t.Errorf("Slice.Shift() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+				}
+
+				if !reflect.DeepEqual(s.ToRaw(), tt.expectedSlice) {
+					t.Errorf("resulting Slice = %v, want %v", s, tt.expectedSlice)
+				}
+			})
+		})
+	}
 }
