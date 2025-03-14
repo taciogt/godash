@@ -220,3 +220,35 @@ func ExampleSlice_ToReversed() {
 	// reversed slice: [5 4 3 2 1]
 	// original slice (unchanged): [1 2 3 4 5]
 }
+
+func ExampleShift() {
+	s := []int{1, 2, 3, 4, 5}
+	element, ok := godash.Shift(&s)
+	fmt.Println("non-empty slice")
+	fmt.Println(element, ok)
+	fmt.Println(s)
+
+	emptySlice := []int{}
+	element, ok = godash.Shift(&emptySlice)
+	fmt.Println("empty slice")
+	fmt.Println(element, ok)
+	fmt.Println(emptySlice)
+
+	// Output:
+	// non-empty slice
+	// 1 true
+	// [2 3 4 5]
+	// empty slice
+	// 0 false
+	// []
+}
+
+func ExampleSlice_Shift() {
+	s := godash.NewSlice(1, 2, 3, 4, 5)
+	element, ok := s.Shift()
+	fmt.Println(element, ok)
+	fmt.Println(s)
+	// Output:
+	// 1 true
+	// [2 3 4 5]
+}
