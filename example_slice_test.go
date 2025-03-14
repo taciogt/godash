@@ -156,6 +156,7 @@ func ExampleReduce() {
 	// Output:
 	// 15 <nil>
 }
+
 func ExampleReduceRight() {
 	words := []string{"Go", "is", "fun"}
 	concat := func(acc, val string) (string, error) {
