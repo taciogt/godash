@@ -1,8 +1,8 @@
 package godash
 
 // ComparableSlice is a generic slice type that restricts its elements to types that satisfy the comparable constraint.
-// It extends the behavior of the standard Slice with some extra functionality that don't require predicates,
-// like the Includes method.
+// It extends the behavior of the standard Slice with some extra functionalities that don't require predicates,
+// like the [Includes] and [IndexOf] methods.
 type ComparableSlice[T comparable] struct {
 	Slice[T]
 }

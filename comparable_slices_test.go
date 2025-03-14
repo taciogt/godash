@@ -573,18 +573,16 @@ func TestComparableSlice_Pop(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Run("method on ComparableSlice", func(t *testing.T) {
-				s := NewComparableSlice(tt.slice...)
+			s := NewComparableSlice(tt.slice...)
 
-				gotResult, gotOk := s.Pop()
-				if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
-					t.Errorf("Slice.Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
-				}
+			gotResult, gotOk := s.Pop()
+			if gotResult != tt.expectedResult || gotOk != tt.expectedOk {
+				t.Errorf("Slice.Pop() = (%v, %v), want (%v, %v)", gotResult, gotOk, tt.expectedResult, tt.expectedOk)
+			}
 
-				if !reflect.DeepEqual(s.ToRawSlice(), tt.expectedSlice) {
-					t.Errorf("resulting %v, want %v", s.Slice, tt.expectedSlice)
-				}
-			})
+			if !reflect.DeepEqual(s.ToRawSlice(), tt.expectedSlice) {
+				t.Errorf("resulting %v, want %v", s.ToRawSlice(), tt.expectedSlice)
+			}
 		})
 	}
 }
