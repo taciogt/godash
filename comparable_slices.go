@@ -30,7 +30,7 @@ func (s ComparableSlice[T]) Includes(value T) bool {
 }
 
 func IndexOf[T comparable](s ComparableSlice[T], value T) (int, bool) {
-	return s.Slice.FindIndex(func(v T) bool {
+	return s.FindIndex(func(v T) bool {
 		return v == value
 	})
 }
@@ -38,12 +38,3 @@ func IndexOf[T comparable](s ComparableSlice[T], value T) (int, bool) {
 func (s ComparableSlice[T]) IndexOf(value T) (int, bool) {
 	return IndexOf(s, value)
 }
-
-//// Pop removes and returns the last element of the ComparableSlice.
-//// If the slice is empty, it returns the zero value of type T and false.
-//func (s *ComparableSlice[T]) Pop() (T, bool) {
-//	rawSlice := s.ToRawSlice()
-//	result, ok := Pop(&rawSlice)
-//	*s = NewComparableSlice(rawSlice...)
-//	return result, ok
-//}
