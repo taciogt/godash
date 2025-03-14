@@ -585,7 +585,6 @@ func TestComparableSlice_Pop(t *testing.T) {
 					t.Errorf("resulting %v, want %v", s.Slice, tt.expectedSlice)
 				}
 			})
-
 		})
 	}
 }
