@@ -66,13 +66,13 @@ The [`Slice`](https://pkg.go.dev/github.com/taciogt/godash#Slice) type extends t
 
 #### Iteration and Transformation
 
-| Method                                                                                                                                            | Description                                          |
-|---------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| [`ForEach(fn func(T, int))`](https://pkg.go.dev/github.com/taciogt/godash#Slice.ForEach)                                                          | Executes a function for each element                 |
-| [`Map(fn func(T, int) U)`](https://pkg.go.dev/github.com/taciogt/godash#Map)                                                                      | Creates a new slice with the results of the function |
-| [`Filter(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Filter)                                                | Returns elements that pass the predicate function    |
-| [`Reduce(s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut)`](https://pkg.go.dev/github.com/taciogt/godash#Reduce)           | Reduces the slice to a single value                  |
-| [`ReduceRight(s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut)`](https://pkg.go.dev/github.com/taciogt/godash#ReduceRight) | Reduces the slice from right to left                 |
+| Method                                                                                                                                            | Description                                                          |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| [`ForEach(fn func(T, int))`](https://pkg.go.dev/github.com/taciogt/godash#Slice.ForEach)                                                          | Executes a function for each element                                 |
+| [`Map(fn func(T, int) U)`](https://pkg.go.dev/github.com/taciogt/godash#Map)                                                                      | Creates a new slice with the results of the function                 |
+| [`Filter(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Filter)                                                | Returns elements that pass the predicate function                    |
+| [`Reduce(s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut)`](https://pkg.go.dev/github.com/taciogt/godash#Reduce)           | Reduces the slice from left to right, accumulating to a single value |
+| [`ReduceRight(s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut)`](https://pkg.go.dev/github.com/taciogt/godash#ReduceRight) | Reduces the slice from right to left, accumulating to a single value |
 
 #### Search Methods
 
