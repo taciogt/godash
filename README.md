@@ -55,6 +55,7 @@ The [Slices](https://pkg.go.dev/github.com/taciogt/godash#Slice) type are a cust
 * [Map()](https://pkg.go.dev/github.com/taciogt/godash#Map)
 * [Reduce()](https://pkg.go.dev/github.com/taciogt/godash#Reduce)
 * [Pop()](https://pkg.go.dev/github.com/taciogt/godash#Slice.Pop)
+* [Push()](https://pkg.go.dev/github.com/taciogt/godash#Slice.Push)
 
 Some extra functionality is supported by the more specific [ComparableSlice](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice) type:
 
