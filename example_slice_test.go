@@ -198,3 +198,25 @@ func ExampleSlice_Reverse() {
 	// reversed integers slice: [5 4 3 2 1]
 	// reversed and filtered: [6 4 2]
 }
+
+func ExampleToReversed() {
+	nums := []int{1, 2, 3, 4, 5}
+	reversed := godash.ToReversed(nums)
+	fmt.Println("reversed slice:", reversed)
+	fmt.Println("original slice (unchanged):", nums)
+
+	// Output:
+	// reversed slice: [5 4 3 2 1]
+	// original slice (unchanged): [1 2 3 4 5]
+}
+
+func ExampleSlice_ToReversed() {
+	s := godash.NewSlice(1, 2, 3, 4, 5)
+	reversed := s.ToReversed()
+	fmt.Println("reversed slice:", reversed)
+	fmt.Println("original slice (unchanged):", s)
+
+	// Output:
+	// reversed slice: [5 4 3 2 1]
+	// original slice (unchanged): [1 2 3 4 5]
+}
