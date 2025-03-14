@@ -265,3 +265,20 @@ func Reduce[TIn any, TOut any, S ~[]TIn](s S, reducer func(acc TOut, curr TIn) (
 
 	return result, nil
 }
+
+// ReduceRight applies a reducer function to each element of the slice, starting from the right (end),
+// resulting in a single output value. The function is called with an accumulator and each element
+// from right to left.
+func ReduceRight[TIn any, TOut any, S ~[]TIn](s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut) (TOut, error) {
+	acc := initialValue
+
+	for i := len(s) - 1; i >= 0; i-- {
+		var err error
+		acc, err = reducer(acc, s[i])
+		if err != nil {
+			return acc, err
+		}
+	}
+
+	return acc, nil
+}
