@@ -59,7 +59,7 @@ func (s Slice[T]) Every(p Predicate[T]) bool {
 }
 
 // Some checks if any element in the slice satisfies the provided predicate function.
-func Some[T any](s Slice[T], p Predicate[T]) bool {
+func Some[T any, S ~[]T](s S, p Predicate[T]) bool {
 	for _, v := range s {
 		if p(v) {
 			return true
