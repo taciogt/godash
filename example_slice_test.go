@@ -252,3 +252,21 @@ func ExampleSlice_Shift() {
 	// 1 true
 	// [2 3 4 5]
 }
+
+func ExampleUnshift() {
+	s := []int{3, 4, 5}
+	fmt.Println(godash.Unshift(&s, 1, 2))
+	fmt.Println(s)
+	// Output:
+	// 5
+	// [1 2 3 4 5]
+}
+
+func ExampleSlice_Unshift() {
+	s := godash.NewSlice(3, 4, 5)
+	fmt.Println(s.Unshift(1, 2))
+	fmt.Println(s)
+	// Output:
+	// 5
+	// [1 2 3 4 5]
+}
