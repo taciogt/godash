@@ -1266,3 +1266,61 @@ func TestShift(t *testing.T) {
 		})
 	}
 }
+
+func TestUnshift(t *testing.T) {
+	tests := []struct {
+		name           string
+		initialSlice   []int
+		valuesToAdd    []int
+		expectedSlice  []int
+		expectedLength int
+	}{{
+		name:           "unshift to empty slice",
+		initialSlice:   []int{},
+		valuesToAdd:    []int{1, 2, 3},
+		expectedSlice:  []int{1, 2, 3},
+		expectedLength: 3,
+	}, {
+		name:           "unshift single value",
+		initialSlice:   []int{4, 5, 6},
+		valuesToAdd:    []int{1},
+		expectedSlice:  []int{1, 4, 5, 6},
+		expectedLength: 4,
+	}, {
+		name:           "unshift multiple values",
+		initialSlice:   []int{3, 4},
+		valuesToAdd:    []int{1, 2},
+		expectedSlice:  []int{1, 2, 3, 4},
+		expectedLength: 4,
+	}, {
+		name:           "unshift empty values to slice",
+		initialSlice:   []int{7, 8, 9},
+		valuesToAdd:    []int{},
+		expectedSlice:  []int{7, 8, 9},
+		expectedLength: 3,
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run("standalone function", func(t *testing.T) {
+				s := make([]int, len(tt.initialSlice))
+				copy(s, tt.initialSlice)
+
+				gotLength := Unshift(&s, tt.valuesToAdd...)
+				if !reflect.DeepEqual(s, tt.expectedSlice) || gotLength != tt.expectedLength {
+					t.Errorf("Unshift() got slice=%v length=%d, want slice=%v length=%d",
+						s, gotLength, tt.expectedSlice, tt.expectedLength)
+				}
+			})
+
+			t.Run("method on Slice", func(t *testing.T) {
+				s := NewSlice[int](tt.initialSlice...)
+				gotLength := s.Unshift(tt.valuesToAdd...)
+				if !reflect.DeepEqual(s.ToRaw(), tt.expectedSlice) || gotLength != tt.expectedLength {
+					t.Errorf("Unshift() got slice=%v length=%d, want slice=%v length=%d",
+						s, gotLength, tt.expectedSlice, tt.expectedLength)
+				}
+			})
+		})
+	}
+}
