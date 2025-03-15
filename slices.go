@@ -336,3 +336,31 @@ func (s *Slice[T]) Shift() (T, bool) {
 	*s = NewSlice(rawSlice...)
 	return result, ok
 }
+
+// Unshift prepends one or more values to the beginning of the provided slice pointer
+// and returns the new length of the slice.
+//
+// Parameters:
+//   - value: One or more values of type T to be added to the beginning of the slice.
+//
+// Returns:
+//   - length: The new length of the slice after the values have been prepended.
+func Unshift[T any, S ~*[]T](s S, value ...T) (length int) {
+	*s = append(value, *s...)
+	return len(*s)
+}
+
+// Unshift prepends one or more values to the beginning of the slice, updating the original slice.
+// It returns the new length of the slice.
+//
+// Parameters:
+//   - value: One or more values of type T to be added to the beginning of the slice.
+//
+// Returns:
+//   - length: The new length of the slice after the values have been prepended.
+func (s *Slice[T]) Unshift(value ...T) (length int) {
+	rawSlice := s.ToRaw()
+	length = Unshift(&rawSlice, value...)
+	*s = NewSlice(rawSlice...)
+	return length
+}
