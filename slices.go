@@ -314,3 +314,53 @@ func ToReversed[T any, S ~[]T](s S) []T {
 func (s Slice[T]) ToReversed() Slice[T] {
 	return ToReversed(s)
 }
+
+// Shift removes and returns the first element of the provided slice, modifying the original slice.
+// If the slice is empty, it returns the zero value of type `T` and `false`.
+func Shift[T any, S ~*[]T](s S) (T, bool) {
+	length := len(*s)
+	if length == 0 {
+		var zero T
+		return zero, false
+	}
+	firstElem := (*s)[0]
+	*s = (*s)[1:]
+	return firstElem, true
+}
+
+// Shift removes and returns the first element of the slice, updating the original slice.
+// If the slice is empty, it returns the zero value of type `T` and `false`.
+func (s *Slice[T]) Shift() (T, bool) {
+	rawSlice := s.ToRaw()
+	result, ok := Shift(&rawSlice)
+	*s = NewSlice(rawSlice...)
+	return result, ok
+}
+
+// Unshift prepends one or more values to the beginning of the provided slice pointer
+// and returns the new length of the slice.
+//
+// Parameters:
+//   - value: One or more values of type T to be added to the beginning of the slice.
+//
+// Returns:
+//   - length: The new length of the slice after the values have been prepended.
+func Unshift[T any, S ~*[]T](s S, value ...T) (length int) {
+	*s = append(value, *s...)
+	return len(*s)
+}
+
+// Unshift prepends one or more values to the beginning of the slice, updating the original slice.
+// It returns the new length of the slice.
+//
+// Parameters:
+//   - value: One or more values of type T to be added to the beginning of the slice.
+//
+// Returns:
+//   - length: The new length of the slice after the values have been prepended.
+func (s *Slice[T]) Unshift(value ...T) (length int) {
+	rawSlice := s.ToRaw()
+	length = Unshift(&rawSlice, value...)
+	*s = NewSlice(rawSlice...)
+	return length
+}
