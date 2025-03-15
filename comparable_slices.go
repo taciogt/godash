@@ -12,7 +12,7 @@ func NewComparableSlice[T comparable](elems ...T) ComparableSlice[T] {
 }
 
 // Includes checks whether the specified value exists within the given ComparableSlice.
-// Returns true if found, false otherwise.
+// Includes reports whether the specified value is present in the slice. It returns true if any element equals the provided value, and false otherwise.
 func Includes[T comparable, S ~[]T](s S, value T) bool {
 	return Some(s, func(v T) bool {
 		return v == value

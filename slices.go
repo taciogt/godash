@@ -74,7 +74,11 @@ func (s Slice[T]) Some(p Predicate[T]) bool {
 }
 
 // Fill replaces elements of a slice with the specified value within the given range or entire slice
-// if no range is provided.
+// Fill returns a new slice with elements replaced by the given value within a specified range of indices.
+// If no positions are provided, every element in the input slice is replaced.
+// If one position is provided, elements from that index to the end of the slice are replaced.
+// If two positions are provided, elements in the inclusive range from positions[0] to positions[1] are replaced.
+// The original slice remains unmodified.
 func Fill[T any, S ~[]T](s S, value T, positions ...int) []T {
 	newSlice := make([]T, len(s))
 	copy(newSlice, s)
