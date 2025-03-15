@@ -8,6 +8,11 @@ func NewSlice[T any](elems ...T) Slice[T] {
 	return elems
 }
 
+// ToRaw converts the generic Slice[T] into a standard Go slice []T, maintaining all elements in their order.
+func (s Slice[T]) ToRaw() []T {
+	return s
+}
+
 // At retrieves the element at the specified index of the Slice.
 // Negative indexes count backward from the end of the Slice.
 func At[T any](s Slice[T], index int) T {
@@ -304,6 +309,12 @@ func ToReversed[T any, S ~[]T](s S) []T {
 	return result
 }
 
+// ToReversed creates and returns a new slice with elements in reverse order,
+// leaving the original slice unchanged.
+func (s Slice[T]) ToReversed() Slice[T] {
+	return ToReversed(s)
+}
+
 // Shift removes and returns the first element of the provided slice, modifying the original slice.
 // If the slice is empty, it returns the zero value of type `T` and `false`.
 func Shift[T any, S ~*[]T](s S) (T, bool) {
@@ -324,17 +335,6 @@ func (s *Slice[T]) Shift() (T, bool) {
 	result, ok := Shift(&rawSlice)
 	*s = NewSlice(rawSlice...)
 	return result, ok
-}
-
-// ToRaw converts the generic Slice[T] into a standard Go slice []T, maintaining all elements in their order.
-func (s Slice[T]) ToRaw() []T {
-	return s
-}
-
-// ToReversed creates and returns a new slice with elements in reverse order,
-// leaving the original slice unchanged.
-func (s Slice[T]) ToReversed() Slice[T] {
-	return ToReversed(s)
 }
 
 // Unshift prepends one or more values to the beginning of the provided slice pointer
