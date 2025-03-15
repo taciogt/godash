@@ -19,6 +19,34 @@ func ExampleEvery() {
 	// false
 }
 
+func ExampleSome() {
+	isEven := func(i int) bool { return i%2 == 0 }
+
+	someEvens := []int{1, 2, 3, 4}
+	fmt.Println(godash.Some(someEvens, isEven))
+
+	noEvens := []int{1, 3, 5, 7}
+	fmt.Println(godash.Some(noEvens, isEven))
+
+	// Output:
+	// true
+	// false
+}
+
+func ExampleSlice_Some() {
+	isEven := func(i int) bool { return i%2 == 0 }
+
+	s := godash.NewSlice(1, 2, 3, 4)
+	fmt.Println(s.Some(isEven))
+
+	s2 := godash.NewSlice(1, 3, 5, 7)
+	fmt.Println(s2.Some(isEven))
+
+	// Output:
+	// true
+	// false
+}
+
 func ExampleSlice_Every() {
 	isEven := func(i int) bool { return i%2 == 0 }
 
