@@ -229,6 +229,139 @@ func TestEvery(t *testing.T) {
 	})
 }
 
+func TestSome(t *testing.T) {
+	t.Run("integer slices", func(t *testing.T) {
+		greaterThanThree := func(value int) bool {
+			return value > 3
+		}
+		isNegative := func(value int) bool {
+			return value < 0
+		}
+
+		tests := []struct {
+			name  string
+			slice []int
+			p     Predicate[int]
+			want  bool
+		}{{
+			name:  "some elements greater than three",
+			slice: []int{1, 2, 3, 4},
+			p:     greaterThanThree,
+			want:  true,
+		}, {
+			name:  "no elements greater than three",
+			slice: []int{1, 2, 3},
+			p:     greaterThanThree,
+			want:  false,
+		}, {
+			name:  "some elements negative",
+			slice: []int{-1, 2, 3},
+			p:     isNegative,
+			want:  true,
+		}, {
+			name:  "empty slice",
+			slice: []int{},
+			p:     isNegative,
+			want:  false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := Some(tt.slice, tt.p); got != tt.want {
+					t.Errorf("Some(%v) = %v, want %v", tt.slice, got, tt.want)
+				}
+
+				s := NewSlice(tt.slice...)
+				if got := s.Some(tt.p); got != tt.want {
+					t.Errorf("s.Some(%v) = %v, want %v", tt.slice, got, tt.want)
+				}
+			})
+		}
+	})
+
+	t.Run("string slices", func(t *testing.T) {
+		containsA := func(value string) bool {
+			return strings.Contains(value, "a")
+		}
+
+		tests := []struct {
+			name  string
+			slice []string
+			p     Predicate[string]
+			want  bool
+		}{{
+			name:  "some strings contain 'a'",
+			slice: []string{"apple", "banana", "pear"},
+			p:     containsA,
+			want:  true,
+		}, {
+			name:  "no strings contain 'a'",
+			slice: []string{"melon", "lemon", "kiwi"},
+			p:     containsA,
+			want:  false,
+		}, {
+			name:  "empty slice",
+			slice: []string{},
+			p:     containsA,
+			want:  false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := Some(tt.slice, tt.p); got != tt.want {
+					t.Errorf("Some(%v) = %v, want %v", tt.slice, got, tt.want)
+				}
+
+				s := NewSlice(tt.slice...)
+				if got := s.Some(tt.p); got != tt.want {
+					t.Errorf("s.Some(%v) = %v, want %v", tt.slice, got, tt.want)
+				}
+			})
+		}
+	})
+
+	t.Run("custom struct slices", func(t *testing.T) {
+		hasPositiveInt := func(cs customStruct) bool {
+			return cs.int > 0
+		}
+
+		tests := []struct {
+			name  string
+			slice []customStruct
+			p     Predicate[customStruct]
+			want  bool
+		}{{
+			name:  "some structs have positive int",
+			slice: []customStruct{{int: -1}, {int: 2}, {int: 0}},
+			p:     hasPositiveInt,
+			want:  true,
+		}, {
+			name:  "no structs have positive int",
+			slice: []customStruct{{int: -1}, {int: -2}, {int: 0}},
+			p:     hasPositiveInt,
+			want:  false,
+		}, {
+			name:  "empty slice",
+			slice: []customStruct{},
+			p:     hasPositiveInt,
+			want:  false,
+		}}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := Some(tt.slice, tt.p); got != tt.want {
+					t.Errorf("Some(%v) = %v, want %v", tt.slice, got, tt.want)
+				}
+
+				s := NewSlice(tt.slice...)
+				if got := s.Some(tt.p); got != tt.want {
+					t.Errorf("s.Some(%v) = %v, want %v", tt.slice, got, tt.want)
+				}
+			})
+		}
+	})
+}
+
 func TestFill(t *testing.T) {
 	tests := []struct {
 		name      string

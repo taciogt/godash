@@ -80,13 +80,14 @@ The [`Slice`](https://pkg.go.dev/github.com/taciogt/godash#Slice) type extends t
 
 #### Search Methods
 
-| Method                                                                                                           | Description                                            |
-|------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
-| [`Every(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Every)                 | Tests if all elements pass the predicate function      |
-| [`Find(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Find)                   | Returns the first element that satisfies the predicate |
-| [`FindIndex(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.FindIndex)         | Returns the index of the first matching element        |
-| [`FindLast(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.FindLast)           | Returns the last element that satisfies the predicate  |
-| [`FindLastIndex(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.FindLastIndex) | Returns the index of the last matching element         |
+| Method                                                                                                           | Description                                                   |
+|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| [`Every(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Every)                 | Tests if all elements pass the predicate function             |
+| [`Find(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Find)                   | Returns the first element that satisfies the predicate        |
+| [`FindIndex(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.FindIndex)         | Returns the index of the first matching element               |
+| [`FindLast(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.FindLast)           | Returns the last element that satisfies the predicate         |
+| [`FindLastIndex(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.FindLastIndex) | Returns the index of the last matching element                |
+| [`Some(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Some)                   | Tests if any element in the slice pass the predicate function |
 
 ### ComparableSlice
 
