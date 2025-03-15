@@ -58,6 +58,21 @@ func (s Slice[T]) Every(p Predicate[T]) bool {
 	return Every(s, p)
 }
 
+// Some checks if any element in the slice satisfies the provided predicate function.
+func Some[T any](s Slice[T], p Predicate[T]) bool {
+	for _, v := range s {
+		if p(v) {
+			return true
+		}
+	}
+	return false
+}
+
+// Some behaves exactly as the [Some] function, except it is called directly on the slice to be checked.
+func (s Slice[T]) Some(p Predicate[T]) bool {
+	return Some(s, p)
+}
+
 // Fill replaces elements of a slice with the specified value within the given range or entire slice
 // if no range is provided.
 func Fill[T any, S ~[]T](s S, value T, positions ...int) []T {
