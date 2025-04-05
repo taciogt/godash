@@ -212,8 +212,8 @@ func (s Slice[T]) ForEach(f func(i int, v T)) {
 // input value. It returns a new slice containing the mapped values. If any error occurs during the mapping
 // process, the function aborts and returns nil along with the error. Otherwise, it returns the new slice
 // of mapped values and a nil error.
-func Map[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) (TOutput, error)) ([]TOutput, error) {
-	result := make([]TOutput, len(s))
+func Map[TIn any, TOut any, S ~[]TIn](s S, mapper Mapper[TIn, TOut]) ([]TOut, error) {
+	result := make([]TOut, len(s))
 	for i, value := range s {
 		mapped, err := mapper(value)
 		if err != nil {
@@ -224,9 +224,11 @@ func Map[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) (TOutput
 	return result, nil
 }
 
-// MustMap applies the mapper function to each element in the input slice and returns a new slice with the mapped results.
-func MustMap[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) TOutput) []TOutput {
-	result := make([]TOutput, len(s))
+// MustMap takes in a slice of input values and a mapper function that doesn't return an error,
+// and applies the mapper function to each input value.
+// It returns a new slice containing the mapped values.
+func MustMap[TIn any, TOut any, S ~[]TIn](s S, mapper MustMapper[TIn, TOut]) []TOut {
+	result := make([]TOut, len(s))
 	for i, value := range s {
 		result[i] = mapper(value)
 	}
