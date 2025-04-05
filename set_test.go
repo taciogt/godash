@@ -46,6 +46,39 @@ func TestAdd(t *testing.T) {
 	}
 }
 
+func TestSet_Clear(t *testing.T) {
+	tests := []struct {
+		name     string
+		initial  Set[int]
+		expected Set[int]
+	}{
+		{
+			name:     "Clear non-empty set",
+			initial:  NewSet(1, 2, 3, 4, 5),
+			expected: NewSet[int](),
+		},
+		{
+			name:     "Clear empty set",
+			initial:  NewSet[int](),
+			expected: NewSet[int](),
+		},
+		{
+			name:     "Clear set with duplicates",
+			initial:  NewSet(1, 1, 2, 2, 3, 3),
+			expected: NewSet[int](),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.initial.Clear()
+			if !reflect.DeepEqual(tt.initial, tt.expected) {
+				t.Errorf("Set.Clear() = %v, want %v", tt.initial, tt.expected)
+			}
+		})
+	}
+}
+
 func TestSet_Delete(t *testing.T) {
 	tests := []struct {
 		name    string

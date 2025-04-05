@@ -32,6 +32,14 @@ func (s *Set[T]) Add(element T) {
 	(*s)[element] = struct{}{}
 }
 
+// Clear removes all elements from the set.
+// This method creates a new empty map instead of deleting each element individually,
+// which is more efficient for memory management, especially for large sets.
+// The old map will be garbage collected, freeing the memory.
+func (s *Set[T]) Clear() {
+	*s = make(Set[T])
+}
+
 // Delete removes the specified element from the set.
 // If the element doesn't exist in the set, no action is taken.
 func (s *Set[T]) Delete(element T) {
