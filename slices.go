@@ -224,6 +224,15 @@ func Map[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) (TOutput
 	return result, nil
 }
 
+// MustMap applies the mapper function to each element in the input slice and returns a new slice with the mapped results.
+func MustMap[TInput any, TOutput any, S ~[]TInput](s S, mapper func(TInput) TOutput) []TOutput {
+	result := make([]TOutput, len(s))
+	for i, value := range s {
+		result[i] = mapper(value)
+	}
+	return result
+}
+
 // Pop removes and returns the last element from the slice pointed to by `s`.
 // If the slice is empty, it returns the zero value of type `T` and `false`.
 // The function modifies the original slice by updating it with one less element.
