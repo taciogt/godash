@@ -2,6 +2,7 @@ package godash
 
 import (
 	"reflect"
+	"runtime"
 	"slices"
 	"sort"
 	"testing"
@@ -77,6 +78,42 @@ func TestSet_Clear(t *testing.T) {
 			}
 		})
 	}
+}
+
+func BenchmarkSet_Clear(b *testing.B) {
+	b.ReportAllocs()
+	var memStats runtime.MemStats
+
+	size := 1_000_000
+	set := NewSet[int]()
+
+	runtime.ReadMemStats(&memStats)
+	beforeAlloc := memStats.Alloc
+
+	for i := range size {
+		set.Add(i)
+	}
+	for b.Loop() {
+		for i := range 1_000 {
+			set.Add(i)
+		}
+
+		set.Clear()
+	}
+
+	// Record ending memory statistics
+	runtime.ReadMemStats(&memStats)
+	afterAlloc := memStats.Alloc
+	b.Logf("Memory change: %d bytes", (afterAlloc-beforeAlloc)/uint64(b.N))
+
+	runtime.GC()
+	runtime.ReadMemStats(&memStats)
+	afterGC := memStats.Alloc
+	b.Logf("Memory freed by GC: %d bytes", (afterGC-afterAlloc)/uint64(b.N))
+
+	//// Calculate and report memory used
+	//b.ReportMetric(float64(m2.TotalAlloc-m1.TotalAlloc)/float64(b.N), "bytes/op")
+
 }
 
 func TestSet_Delete(t *testing.T) {
