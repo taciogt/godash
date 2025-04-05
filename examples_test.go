@@ -26,6 +26,17 @@ func ExampleMap() {
 	// [0 2 4 6 8] <nil>
 }
 
+func ExampleMustMap() {
+	doubleToString := func(i int) string {
+		return strconv.Itoa(i * 2)
+	}
+	input := []int{0, 1, 2, 3, 4}
+
+	fmt.Println(MustMap(input, doubleToString))
+	// Output:
+	// [0 2 4 6 8]
+}
+
 func ExampleReduce() {
 	sum := func(acc int, curr int) (int, error) {
 		return acc + curr, nil

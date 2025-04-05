@@ -73,7 +73,8 @@ The [`Slice`](https://pkg.go.dev/github.com/taciogt/godash#Slice) type extends t
 | Method                                                                                                                                            | Description                                                          |
 |---------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
 | [`ForEach(fn func(T, int))`](https://pkg.go.dev/github.com/taciogt/godash#Slice.ForEach)                                                          | Executes a function for each element                                 |
-| [`Map(fn func(T, int) U)`](https://pkg.go.dev/github.com/taciogt/godash#Map)                                                                      | Creates a new slice with the results of the function                 |
+| [`Map(fn func(T) (U, error))`](https://pkg.go.dev/github.com/taciogt/godash#Map)                                                                  | Creates a new slice with the results of a mapper function            |
+| [`MustMap(fn func(T) U)`](https://pkg.go.dev/github.com/taciogt/godash#MustMap)                                                                   | Like `Map`, but using a mapper function that doesn't return errors   |
 | [`Filter(predicate func(T, int) bool)`](https://pkg.go.dev/github.com/taciogt/godash#Slice.Filter)                                                | Returns elements that pass the predicate function                    |
 | [`Reduce(s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut)`](https://pkg.go.dev/github.com/taciogt/godash#Reduce)           | Reduces the slice from left to right, accumulating to a single value |
 | [`ReduceRight(s S, reducer func(acc TOut, curr TIn) (TOut, error), initialValue TOut)`](https://pkg.go.dev/github.com/taciogt/godash#ReduceRight) | Reduces the slice from right to left, accumulating to a single value |
@@ -97,6 +98,21 @@ The [`ComparableSlice`](https://pkg.go.dev/github.com/taciogt/godash#ComparableS
 |----------------------------------------------------------------------------------------------|---------------------------------------------------------------|
 | [`Includes(value T)`](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice.Includes) | Determines if the slice includes a certain value              |
 | [`IndexOf(value T)`](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice.IndexOf)   | Returns the first index at which a given element can be found |
+
+## Function Types
+
+### Predicate
+
+The [`Predicate`](https://pkg.go.dev/github.com/taciogt/godash#Predicate) type is a function that takes a single argument of type `T` and returns a boolean value.
+
+### Mapper
+
+The [`Mapper`](https://pkg.go.dev/github.com/taciogt/godash#Mapper) type is a function that maps a value of type `TInput` to a value of type `TOutput`.
+
+### MustMapper
+
+The [`MustMapper`](https://pkg.go.dev/github.com/taciogt/godash#MustMapper) type is a function that maps a value of type `TInput` to a value of type `TOutput`.
+It panics if an error occurs during execution and should be used mainly for functions where an error isn't expected. 
 
 ## Contributing
 

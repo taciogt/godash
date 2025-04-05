@@ -892,6 +892,44 @@ func TestMap(t *testing.T) {
 	}
 }
 
+func TestMustMap(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    []int
+		mapper   func(int) string
+		expected []string
+	}{{
+		name:     "empty input slice",
+		input:    []int{},
+		mapper:   func(i int) string { return strconv.Itoa(i) },
+		expected: []string{},
+	}, {
+		name:     "identity mapping",
+		input:    []int{1, 2, 3},
+		mapper:   func(i int) string { return strconv.Itoa(i) },
+		expected: []string{"1", "2", "3"},
+	}, {
+		name:     "transformation mapping",
+		input:    []int{1, 2, 3},
+		mapper:   func(i int) string { return "val-" + strconv.Itoa(i) },
+		expected: []string{"val-1", "val-2", "val-3"},
+	}, {
+		name:     "negative input",
+		input:    []int{-1, -2, -3},
+		mapper:   func(i int) string { return strconv.Itoa(i * -1) },
+		expected: []string{"1", "2", "3"},
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := MustMap(tt.input, tt.mapper)
+			if !reflect.DeepEqual(got, tt.expected) {
+				t.Errorf("MustMap() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+}
+
 func TestPop(t *testing.T) {
 	tests := []struct {
 		name           string
