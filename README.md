@@ -99,7 +99,7 @@ The [`ComparableSlice`](https://pkg.go.dev/github.com/taciogt/godash#ComparableS
 | [`Includes(value T)`](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice.Includes) | Determines if the slice includes a certain value              |
 | [`IndexOf(value T)`](https://pkg.go.dev/github.com/taciogt/godash#ComparableSlice.IndexOf)   | Returns the first index at which a given element can be found |
 
-## Auxiliar Types
+## Function Types
 
 ### Predicate
 
