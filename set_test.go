@@ -84,21 +84,18 @@ func BenchmarkSet_Clear(b *testing.B) {
 	b.ReportAllocs()
 	var memStats runtime.MemStats
 
-	sets := make([]Set[int], 0)
+	set := NewSet[int]()
 
 	runtime.ReadMemStats(&memStats)
 	beforeAlloc := memStats.Alloc
 
-	for b.Loop() {
-		set := NewSet[int]()
-		sets = append(sets, set)
-
+	//for b.Loop() { // won't use b.Loop() due to compatibility issues: the CI pipeline runs with Go versions older than 1.24
+	for i := 0; i < b.N; i++ {
 		for i := range 1_000_000 {
 			set.Add(i)
 		}
 
 		set.Clear()
-
 	}
 
 	// Record ending memory statistics
