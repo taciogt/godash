@@ -37,6 +37,7 @@ It can store any type that implements the [comparable](https://go.dev/ref/spec#T
 | Method                                                                         | Description                                |
 |--------------------------------------------------------------------------------|--------------------------------------------|
 | [`Add(element T)`](https://pkg.go.dev/github.com/taciogt/godash#Set.Add)       | Adds an element to the set                 |
+| [`Clear()`](https://pkg.go.dev/github.com/taciogt/godash#Set.Clar)             | Removes all elements from the set          |
 | [`Delete(element T)`](https://pkg.go.dev/github.com/taciogt/godash#Set.Delete) | Removes an element from the set            |
 | [`Has(element T)`](https://pkg.go.dev/github.com/taciogt/godash#Set.Has)       | Checks if an element exists in the set     |
 | [`Size()`](https://pkg.go.dev/github.com/taciogt/godash#Set.Size)              | Returns the number of elements in the set  |
