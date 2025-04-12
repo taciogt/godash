@@ -91,7 +91,7 @@ func BenchmarkSet_Clear(b *testing.B) {
 
 	//for b.Loop() { // won't use b.Loop() due to compatibility issues: the CI pipeline runs with Go versions older than 1.24
 	for i := 0; i < b.N; i++ {
-		for i := range 1_000_000 {
+		for i := range 10_000 {
 			set.Add(i)
 		}
 
