@@ -2,6 +2,7 @@ package godash
 
 import (
 	"reflect"
+	"runtime"
 	"slices"
 	"sort"
 	"testing"
@@ -44,6 +45,68 @@ func TestAdd(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestSet_Clear(t *testing.T) {
+	tests := []struct {
+		name     string
+		initial  Set[int]
+		expected Set[int]
+	}{
+		{
+			name:     "Clear non-empty set",
+			initial:  NewSet(1, 2, 3, 4, 5),
+			expected: NewSet[int](),
+		},
+		{
+			name:     "Clear empty set",
+			initial:  NewSet[int](),
+			expected: NewSet[int](),
+		},
+		{
+			name:     "Clear set with duplicates",
+			initial:  NewSet(1, 1, 2, 2, 3, 3),
+			expected: NewSet[int](),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.initial.Clear()
+			if !reflect.DeepEqual(tt.initial, tt.expected) {
+				t.Errorf("Set.Clear() = %v, want %v", tt.initial, tt.expected)
+			}
+		})
+	}
+}
+
+func BenchmarkSet_Clear(b *testing.B) {
+	b.ReportAllocs()
+	var memStats runtime.MemStats
+
+	set := NewSet[int]()
+
+	runtime.ReadMemStats(&memStats)
+	beforeAlloc := memStats.Alloc
+
+	//for b.Loop() { // won't use b.Loop() due to compatibility issues: the CI pipeline runs with Go versions older than 1.24
+	for i := 0; i < b.N; i++ {
+		for i := range 10_000 {
+			set.Add(i)
+		}
+
+		set.Clear()
+	}
+
+	// Record ending memory statistics
+	runtime.ReadMemStats(&memStats)
+	afterAlloc := memStats.Alloc
+	b.Logf("Memory change: %d bytes", (afterAlloc-beforeAlloc)/uint64(b.N))
+
+	runtime.GC()
+	runtime.ReadMemStats(&memStats)
+	afterGC := memStats.Alloc
+	b.Logf("Memory freed by GC: %d bytes", (afterGC-afterAlloc)/uint64(b.N))
 }
 
 func TestSet_Delete(t *testing.T) {

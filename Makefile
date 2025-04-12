@@ -18,6 +18,11 @@ setup:  ## Install dependencies for local development
 test:
 	$(GOTEST) -v ./...
 
+.PHONY: bench
+bench:
+	go test -bench=. -benchmem
+
+
 COVERAGE_OUT = coverage.out
 $(COVERAGE_OUT): *.go
 	$(GOTEST) -cover -coverprofile=coverage.out -v ./...
